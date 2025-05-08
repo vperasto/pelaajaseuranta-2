@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pelaajaseuranta – Basket Tracker</title>
+    <title>Pelaajaseuranta – Basket Tracker v1.1</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,14 +14,25 @@
 <body>
     <div class="container">
         <header>
-            <h1>Pelaajaseuranta – Basket Tracker</h1>
+            <h1>Pelaajaseuranta – Basket Tracker <span class="version-number">v1.1</span></h1>
         </header>
 
         <!-- Vaihe 1: Pelaajien syöttö & Pelin Asetukset -->
         <section id="setupView">
             <h2>Pelin Asetukset ja Pelaajat</h2>
-            <div class="game-setup-controls">
-                <input type="text" id="gameName" placeholder="Pelin nimi (esim. Kobrat - Honsu)">
+            <div class="game-setup-options"> <!-- Uusi kääre asetuksille -->
+                <div class="form-group">
+                    <label for="gameName">Pelin nimi:</label>
+                    <input type="text" id="gameName" placeholder="esim. Kobrat - Honsu">
+                </div>
+                <div class="form-group">
+                    <label for="maxPlayersOnCourtSetting">Pelaajia kentällä:</label>
+                    <select id="maxPlayersOnCourtSetting">
+                        <option value="3">3 vs 3</option>
+                        <option value="4">4 vs 4</option>
+                        <option value="5" selected>5 vs 5</option>
+                    </select>
+                </div>
             </div>
             <div class="player-input-area">
                 <input type="text" id="playerName" placeholder="Pelaajan nimi">
@@ -31,12 +42,12 @@
             <div id="playerList">
                 <!-- Pelaajakortit tulevat tänne -->
             </div>
-            <button id="navigateToGameBtn" class="nav-button">Siirry Pelin Seurantaan</button>
+            <button id="navigateToGameBtn" class="nav-button primary-nav">Siirry Pelin Seurantaan</button>
         </section>
 
         <!-- Vaihe 2: Pelin seuranta -->
         <section id="gameView" class="hidden">
-            <div class="game-view-header"> <!-- Uusi kääre otsikolle -->
+            <div class="game-view-header">
                 <h2 id="currentGameNameDisplay">Pelin Seuranta</h2>
             </div>
             
@@ -44,18 +55,13 @@
                 <!-- Pelaajien peliaikaiset kontrollit tulevat tänne -->
             </div>
 
-            <!-- Sticky Game Controls -->
             <div class="sticky-game-controls">
                 <button id="startGameBtn">Aloita Peli</button>
-                <button id="togglePauseBtn" disabled>Aloita Pelikatko</button>
-                <button id="nextQuarterBtn" disabled>Seuraava Jakso (Q1)</button>
+                <button id="togglePauseBtn" disabled>Aloita Katko</button>
+                <button id="nextQuarterBtn" disabled>Jakso (Q1)</button>
                 <button id="endGameBtn" disabled>Lopeta Peli</button>
-            </div>
-
-            <div class="navigation-buttons-game-view"> <!-- Kääre navigaationapeille pelinäkymässä -->
-                <button id="navigateToSetupBtn" class="nav-button">Palaa Pelaajasyöttöön</button>
-                <button id
-="navigateToHistoryBtn" class="nav-button">Näytä Historia</button>
+                <button id="navigateToHistoryBtn" class="nav-button secondary-nav">Historia</button>
+                <button id="navigateToSetupBtn" class="nav-button secondary-nav">Asetukset</button>
             </div>
         </section>
 
@@ -64,12 +70,12 @@
             <h2>Pelihistoria</h2>
             <div class="history-controls">
                 <button id="copyHistoryBtn">Kopioi Historia</button>
-                <button id="clearGameHistoryBtn">Tyhjennä Pelihistoria (säilytä pelaajat)</button>
+                <button id="clearGameHistoryBtn">Tyhjennä Pelihistoria</button>
             </div>
             <div id="gameHistoryLog" class="history-log">
                 <!-- Tapahtumalogit tulevat tänne -->
             </div>
-            <button id="backToGameFromHistoryBtn" class="nav-button">Palaa Pelin Seurantaan</button>
+            <button id="backToGameFromHistoryBtn" class="nav-button primary-nav">Palaa Pelin Seurantaan</button>
         </section>
 
     </div>
