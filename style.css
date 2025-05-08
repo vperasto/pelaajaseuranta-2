@@ -44,7 +44,7 @@ header {
 
 /* Sovelluksen logo headerissa */
 #appLogo {
-    height: 40px; 
+    height: 130px; 
     width: auto;  
     object-fit: contain; 
     border-radius: 4px; 
@@ -418,7 +418,7 @@ button:disabled {
         gap: 8px;
     }
     #appLogo { /* Pienennetään logoa tabletissa */
-        height: 35px;
+        height: 70px;
     }
     header h1 {
         font-size: 1.4rem; /* Pienennetään otsikkoa tabletissa */
@@ -461,7 +461,7 @@ button:disabled {
         padding-bottom: 120px; 
     }
     #appLogo { /* Pienempi logo mobiilissa */
-        height: 30px; 
+        height: 50px; 
     }
     header h1 {
         font-size: 1.2rem; /* Pienempi otsikko mobiilissa logon kanssa */
