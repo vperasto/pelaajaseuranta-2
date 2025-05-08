@@ -149,7 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // UUSI: Järjestetään pelaajat: kentällä olevat ensin, sitten numeron mukaan
         const sortedPlayers = [...appData.players].sort((a, b) => {
             if (a.onCourt !== b.onCourt) {
                 return b.onCourt - a.onCourt; 
@@ -164,10 +163,8 @@ document.addEventListener('DOMContentLoaded', () => {
             let fouledOutIndicator = player.fouledOut ? '<span class="player-fouled-out-indicator">5 VIRHETTÄ</span>' : '';
             let toggleBtnDisabled = player.fouledOut ? 'disabled' : '';
             
-            // UUSI: Toimintonappien näyttölogiikka
             let actionButtonsHTML = '';
-            const commonActionButtonsDisabled = player.fouledOut; // Yleinen disablointi fouledOut-tilassa
-
+            // Toimintonapit näytetään VAIN jos pelaaja on kentällä EIKÄ ole fouledOut
             if (player.onCourt && !player.fouledOut) {
                 actionButtonsHTML = `
                     <div class="action-btn-group">
@@ -181,20 +178,21 @@ document.addEventListener('DOMContentLoaded', () => {
                         <button class="action-btn" data-id="${player.id}" data-action="rebound">Levypallo</button>
                     </div>
                 `;
-            } else if (!player.onCourt && !player.fouledOut) { 
-                // Penkillä olevalle vain virhe-nappi (esim. tekninen virhe valmentajalle/pelaajalle penkillä)
-                actionButtonsHTML = `
-                     <div class="action-btn-group">
-                        <button class="action-btn" data-id="${player.id}" data-action="foul">Virhe</button>
-                    </div>
-                `;
-            } else if (player.fouledOut) { // Jos fouled out, voidaan sallia virheen antaminen, jos niitä on alle X (esim. jos säännöt sallivat teknisen virheen lisäyksen)
+            } 
+            // Jos pelaaja on fouledOut, mutta virheitä on alle X (esim. säännöt sallivat teknisen virheen lisäyksen, vaikka pelaaja olisi jo poistettu 5:llä henkilökohtaisella)
+            // TÄMÄ ON ERIKOISTAPAUS JA VOI OLLA MONIMUTKAINEN SÄÄNTÖJEN MUKAAN.
+            // YKSINKERTAISUUDEN VUOKSI VOIDAAN OLETTAA, ETTÄ FOUL OUT -TILASSA EI ENÄÄ ANNETA VIRHEITÄ TÄMÄN KAUTTA.
+            // JOS HALUTAAN SALLIA VIRHEEN ANTO FOUL OUT -TILASSA (ESIM. TEKNINEN):
+            /*
+            else if (player.fouledOut && player.fouls < 7) { // Esimerkki: max 7 virhettä yhteensä
                  actionButtonsHTML = `
                      <div class="action-btn-group">
-                        <button class="action-btn" data-id="${player.id}" data-action="foul" ${player.fouls >= 7 ? 'disabled' : ''}>Virhe</button> 
+                        <button class="action-btn" data-id="${player.id}" data-action="foul">Virhe (Tekninen)</button> 
                     </div>
-                `; // Esim. jos max virheitä vaikka 7 teknisten kanssa. Tämä logiikka voi olla monimutkainen.
+                `;
             }
+            */
+            // Muussa tapauksessa (penkillä, ei fouledOut TAI fouledOut ja max virheet täynnä), actionButtonsHTML jää tyhjäksi.
 
 
             card.innerHTML = `
