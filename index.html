@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pelaajaseuranta – Basket Tracker</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Roboto:wght@400;500&family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Pelaajaseuranta – Basket Tracker</h1>
+        </header>
+
+        <!-- Vaihe 1: Pelaajien syöttö & Pelin Asetukset -->
+        <section id="setupView">
+            <h2>Pelin Asetukset ja Pelaajat</h2>
+            <div class="game-setup-controls">
+                <input type="text" id="gameName" placeholder="Pelin nimi (esim. Kobrat - Honsu)">
+            </div>
+            <div class="player-input-area">
+                <input type="text" id="playerName" placeholder="Pelaajan nimi">
+                <input type="text" id="playerNumber" placeholder="Pelinumero">
+                <button id="addPlayerBtn">Lisää Pelaaja</button>
+            </div>
+            <div id="playerList">
+                <!-- Pelaajakortit tulevat tänne -->
+            </div>
+            <button id="navigateToGameBtn" class="nav-button">Siirry Pelin Seurantaan</button>
+        </section>
+
+        <!-- Vaihe 2: Pelin seuranta -->
+        <section id="gameView" class="hidden">
+            <div class="game-view-header"> <!-- Uusi kääre otsikolle -->
+                <h2 id="currentGameNameDisplay">Pelin Seuranta</h2>
+            </div>
+            
+            <div id="gamePlayerList">
+                <!-- Pelaajien peliaikaiset kontrollit tulevat tänne -->
+            </div>
+
+            <!-- Sticky Game Controls -->
+            <div class="sticky-game-controls">
+                <button id="startGameBtn">Aloita Peli</button>
+                <button id="togglePauseBtn" disabled>Aloita Pelikatko</button>
+                <button id="nextQuarterBtn" disabled>Seuraava Jakso (Q1)</button>
+                <button id="endGameBtn" disabled>Lopeta Peli</button>
+            </div>
+
+            <div class="navigation-buttons-game-view"> <!-- Kääre navigaationapeille pelinäkymässä -->
+                <button id="navigateToSetupBtn" class="nav-button">Palaa Pelaajasyöttöön</button>
+                <button id
+="navigateToHistoryBtn" class="nav-button">Näytä Historia</button>
+            </div>
+        </section>
+
+        <!-- Vaihe 3: Historia -->
+        <section id="historyView" class="hidden">
+            <h2>Pelihistoria</h2>
+            <div class="history-controls">
+                <button id="copyHistoryBtn">Kopioi Historia</button>
+                <button id="clearGameHistoryBtn">Tyhjennä Pelihistoria (säilytä pelaajat)</button>
+            </div>
+            <div id="gameHistoryLog" class="history-log">
+                <!-- Tapahtumalogit tulevat tänne -->
+            </div>
+            <button id="backToGameFromHistoryBtn" class="nav-button">Palaa Pelin Seurantaan</button>
+        </section>
+
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
