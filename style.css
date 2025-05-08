@@ -19,7 +19,7 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     margin: 0;
-    padding: 0; /* Poistetaan oletuspadding, jotta sticky toimii paremmin */
+    padding: 0; 
     line-height: 1.6;
     font-weight: 400;
 }
@@ -27,10 +27,7 @@ body {
 .container {
     max-width: 900px;
     margin: 0 auto;
-    padding: 15px; /* Padding kontainerin sisällä */
-    /* background-color: var(--surface-color); Poistetaan, jos halutaan sticky-elementin tausta erottuvaksi */
-    /* border-radius: 8px; */
-    /* box-shadow: 0 4px 12px rgba(0,0,0,0.3); */
+    padding: 15px; 
 }
 
 header {
@@ -54,20 +51,20 @@ h2 {
     color: var(--primary-color);
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 10px;
-    margin-top: 20px; /* Vähennetty hieman */
+    margin-top: 20px; 
     margin-bottom: 20px;
     font-size: 1.6rem; 
 }
-#setupView, #historyView { /* Lisätään tausta näkymille, jotka eivät ole gameView */
+#setupView, #historyView { 
     background-color: var(--surface-color);
     padding: 15px;
     border-radius: 8px;
     margin-top: 15px;
 }
-#gameView { /* GameView tarvitsee paddingin pohjalle sticky-elementin takia */
-    padding-bottom: 80px; /* Tilaa sticky-elementille */
-     background-color: var(--surface-color);
-    padding-top:1px; /* Estää marginaalien romahtamisen */
+#gameView { 
+    padding-bottom: 80px; 
+    background-color: var(--surface-color);
+    padding-top:1px; 
     padding-left: 15px;
     padding-right: 15px;
     border-radius: 8px;
@@ -76,7 +73,6 @@ h2 {
 .game-view-header {
     margin-bottom: 10px;
 }
-
 
 /* Piilotettu näkymä */
 .hidden {
@@ -108,10 +104,10 @@ button {
     background-color: var(--primary-color);
     color: var(--bg-color); 
     border: none;
-    padding: 10px 18px; /* Hieman pienempi padding yleisesti */
+    padding: 10px 18px; 
     border-radius: 6px;
     cursor: pointer;
-    font-size: 0.9rem; /* Hieman pienempi fontti yleisesti */
+    font-size: 0.9rem; 
     text-transform: uppercase; 
     letter-spacing: 0.5px; 
     transition: background-color 0.2s ease, transform 0.1s ease;
@@ -137,7 +133,7 @@ button:disabled {
     color: var(--text-color);
     display: block;
     width: calc(100% - 10px); 
-    margin-top: 15px; /* Pienennetty hieman */
+    margin-top: 15px; 
 }
 .nav-button:hover {
     background-color: #475569;
@@ -161,7 +157,7 @@ button:disabled {
 /* Pelaajalista (syöttö & pelinäkymä) */
 #playerList, #gamePlayerList {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Palautettu hieman kapeammaksi korteiksi */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
     gap: 15px; 
     margin-top: 20px;
 }
@@ -190,7 +186,7 @@ button:disabled {
     border-left: 6px solid #64748B; 
 }
 
-.player-card.fouled-out { /* UUSI: Fouled out -pelaajan tyyli */
+.player-card.fouled-out { 
     border-left: 6px solid var(--accent-color-fouled-out);
     background-color: color-mix(in srgb, var(--accent-color-fouled-out) 10%, var(--bg-color));
     opacity: 0.7;
@@ -199,6 +195,7 @@ button:disabled {
 .player-card.fouled-out .toggle-status-btn {
     background-color: #475569 !important;
     cursor: not-allowed !important;
+    color: #94A3B8 !important; /* Lisätty tekstin väri disabloituna */
 }
 
 
@@ -213,15 +210,15 @@ button:disabled {
     font-weight: 600; 
     margin: 0;
     color: var(--text-color);
-    font-size: 1.2rem; /* Pienennetty hieman */
+    font-size: 1.2rem; 
 }
 .player-info .player-number {
     font-family: var(--font-family-body);
     font-weight: 500; 
     color: var(--primary-color);
-    font-size: 1rem; /* Pienennetty hieman */
+    font-size: 1rem; 
 }
-.player-fouled-out-indicator { /* UUSI */
+.player-fouled-out-indicator { 
     color: var(--accent-color-fouled-out);
     font-weight: bold;
     font-size: 0.8rem;
@@ -231,43 +228,53 @@ button:disabled {
 
 .player-stats { 
     font-family: var(--font-family-body);
-    font-size: 0.8rem; /* Pienennetty hieman */
+    font-size: 0.8rem; 
     color: #CBD5E1; 
     display: block; 
     margin-bottom: 10px; 
 }
 
+/* --- PELAAJAKORTIN TOIMINNOT - MUUTETUT OSUUDET --- */
 .player-actions {
     margin-top: auto; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
 }
 
-.player-actions button, .player-card .toggle-status-btn {
-    width: calc(50% - 8px); /* Hieman kapeammat napit, jotta mahtuu paremmin */
-    margin: 4px; 
-    font-size: 0.8rem; 
-    padding: 8px 10px; 
-    text-transform: none; 
-}
 .player-card .toggle-status-btn { 
     font-weight: 500;
-    width: calc(100% - 8px); 
-    margin-bottom: 8px; 
+    width: calc(100% - 8px); /* Täysi leveys miinus marginaalit (jos marginaalit 4px per sivu) */
+    margin: 4px; /* Pidä marginaali, jos halutaan erottaa se ryhmistä */
+    order: -1; /* Visuaalisesti ensimmäiseksi, jos HTML-rakenne ei jo ole näin */
+    text-transform: none; /* Poistetaan uppercase tästä napista, jos halutaan */
+    font-size: 0.8rem; /* Samaistetaan muiden pienten nappien kanssa */
+    padding: 8px 10px; /* Samaistetaan muiden pienten nappien kanssa */
 }
 
 .player-actions .action-btn-group {
     display: flex;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; Poistettu, jotta napit yrittävät pysyä yhdellä rivillä */
     gap: 6px; 
 }
-.player-actions .action-btn-group button {
+
+.player-actions .action-btn-group button { /* Nämä ovat +1P, +2P, +3P, Virhe, Syöttö, Levypallo napit */
     flex-grow: 1; 
+    flex-basis: 0; 
+    margin: 0; /* gap hoitaa välit */
+    font-size: 0.75rem; 
+    padding: 8px 6px; 
+    min-width: 0; /* Tärkeä! Sallii nappien kutistua */
+    text-transform: none; /* Poistetaan uppercase näistä pienemmistä napeista */
     background-color: var(--accent-color-action);
-    color: var(--text-color);
+    color: var(--text-color); 
     font-weight: 500; 
 }
 .player-actions .action-btn-group button:hover {
     background-color: color-mix(in srgb, var(--accent-color-action) 80%, black);
 }
+/* --- MUUTETUT OSUUDET PÄÄTTYVÄT --- */
+
 
 /* Pelin kontrollit (ei-sticky) */
 .game-setup-controls, .history-controls {
@@ -283,28 +290,28 @@ button:disabled {
 
 /* Sticky Game Controls */
 .sticky-game-controls {
-    position: fixed; /* Kiinnitys näytön alaosaan */
+    position: fixed; 
     bottom: 0;
     left: 0;
     right: 0;
     background-color: var(--surface-color);
-    padding: 10px 5px; /* Vähemmän paddingia sivuilla, enemmän ylhäällä/alhaalla */
+    padding: 10px 5px; 
     box-shadow: 0 -3px 8px rgba(0,0,0,0.3);
     z-index: 1000;
     display: flex;
-    justify-content: space-around; /* Jakaa napit tasaisesti */
+    justify-content: space-around; 
     align-items: center;
-    flex-wrap: wrap; /* Napit voivat rivittyä pienillä näytöillä */
+    flex-wrap: wrap; 
 }
 .sticky-game-controls button {
-    flex-grow: 1; /* Napit yrittävät täyttää tilaa */
+    flex-grow: 1; 
     margin: 5px;
-    min-width: 120px; /* Minimileveys napeille */
-    padding: 12px 10px; /* Isompi padding sticky-napeille */
+    min-width: 120px; 
+    padding: 12px 10px; 
     font-size: 0.9rem;
 }
-.navigation-buttons-game-view { /* Kääre navigaationapeille pelinäkymässä */
-    margin-top: 20px; /* Tilaa sticky-kontrollien ja näiden välille */
+.navigation-buttons-game-view { 
+    margin-top: 20px; 
 }
 
 
@@ -322,7 +329,7 @@ button:disabled {
     color: #CBD5E1; 
 }
 
-.history-log-entry { /* UUSI: Kääre tapahtumariville ja poistonapille */
+.history-log-entry { 
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -334,20 +341,21 @@ button:disabled {
     border-bottom: none;
     margin-bottom: 0;
 }
-.history-log-entry p { /* Poistetaan marginaalit <p>:ltä */
+.history-log-entry p { 
     margin: 0;
-    flex-grow: 1; /* Teksti vie suurimman osan tilasta */
+    flex-grow: 1; 
 }
-.remove-history-event-btn { /* UUSI: Historian poistonappi */
+.remove-history-event-btn { 
     background-color: var(--accent-color-fouled-out);
     color: var(--text-color);
     padding: 3px 8px;
     font-size: 0.8rem;
     border-radius: 4px;
     margin-left: 10px;
-    line-height: 1; /* Estää napin korkeuden muuttumisen */
+    line-height: 1; 
     border: none;
     cursor: pointer;
+    text-transform: none; /* Poistetaan uppercase tästä napista */
 }
 .remove-history-event-btn:hover {
     background-color: color-mix(in srgb, var(--accent-color-fouled-out) 80%, black);
@@ -357,13 +365,13 @@ button:disabled {
 /* Responsiivisuus */
 @media (max-width: 768px) { 
     body {
-        padding-bottom: 70px; /* Varmistetaan tilaa sticky-kontrolleille pienillä näytöillä */
+        padding-bottom: 70px; 
     }
     .container {
         padding: 10px;
     }
      #gameView {
-        padding-bottom: 100px; /* Enemmän tilaa, jos sticky-napit rivittyvät */
+        padding-bottom: 100px; 
     }
     header h1 {
         font-size: 1.7rem;
@@ -379,21 +387,24 @@ button:disabled {
         margin-right: 0;
         box-sizing: border-box; 
     }
-    .player-card .toggle-status-btn,
-    .player-actions button {
-        width: calc(100% - 8px); 
-        box-sizing: border-box;
-        margin: 4px 0; 
-    }
-     .player-actions .action-btn-group {
-        flex-direction: column; 
-    }
+    /* Ei tarvita erillisiä sääntöjä pelaajakortin napeille tabletissa, jos ylläolevat toimivat.
+       Testataan ja säädetään tarvittaessa.
+       .player-card .toggle-status-btn,
+       .player-actions .action-btn-group button {
+           width: calc(100% - 8px); 
+           box-sizing: border-box;
+           margin: 4px 0; 
+       }
+       .player-actions .action-btn-group {
+           flex-direction: column; 
+       }
+    */
 
     .sticky-game-controls button {
-        min-width: calc(50% - 10px); /* Kaksi nappia rinnakkain sticky-palkissa */
+        min-width: calc(50% - 10px); 
         font-size: 0.8rem;
     }
-    .history-controls { /* Historian kontrollit allekkain */
+    .history-controls { 
         flex-direction: column;
     }
     .history-controls button {
@@ -404,7 +415,7 @@ button:disabled {
 
 @media (max-width: 480px) { 
     #gameView {
-        padding-bottom: 130px; /* Vielä enemmän tilaa, jos napit menevät useammalle riville */
+        padding-bottom: 130px; 
     }
     header h1 {
         font-size: 1.5rem;
@@ -417,30 +428,35 @@ button:disabled {
     }
     #playerList, #gamePlayerList {
         grid-template-columns: 1fr; 
-        gap: 10px; /* Pienempi väli */
+        gap: 10px; 
     }
     .player-card {
-        padding: 12px; /* Pienempi padding kortille */
+        padding: 12px; 
     }
      button { 
-        padding: 10px 15px; /* Pienempi padding napeille */
-        font-size: 0.85rem; /* Pienempi fontti napeille */
+        padding: 10px 15px; 
+        font-size: 0.85rem; 
     }
-    .player-card .toggle-status-btn,
-    .player-actions button {
-        font-size: 0.75rem;
-        padding: 7px 9px;
+    /* Pelaajakortin napit mobiilissa */
+    .player-card .toggle-status-btn {
+        font-size: 0.8rem; /* Yhdenmukaistettu */
+        padding: 8px 10px;
     }
+    .player-actions .action-btn-group button {
+        font-size: 0.7rem; /* Vielä hieman pienempi mobiilissa */
+        padding: 7px 5px; 
+    }
+
     .sticky-game-controls {
         padding: 8px 5px;
     }
     .sticky-game-controls button {
         padding: 10px 8px;
         font-size: 0.75rem;
-        min-width: calc(50% - 10px); /* Kaksi nappia rinnakkain */
+        min-width: calc(50% - 10px); 
     }
     .history-log-entry p {
-        font-size: 0.8rem; /* Pienempi fontti historia-logeissa */
+        font-size: 0.8rem; 
     }
     .remove-history-event-btn {
         padding: 2px 6px;
