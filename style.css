@@ -178,7 +178,7 @@ input[type="text"]::placeholder, input[type="number"]::placeholder {
     color: #94A3B8;
 }
 
-/* --- YLEISET PAINIKKEET - MUUTETTU ACTIVE-TILA --- */
+/* --- YLEISET PAINIKKEET - VOIMAKKAAMPI ACTIVE-TILA --- */
 button {
     font-family: var(--font-family-body);
     font-weight: 500; 
@@ -191,15 +191,15 @@ button {
     font-size: 0.9rem; 
     text-transform: uppercase; 
     letter-spacing: 0.5px; 
-    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.1s ease;
+    transition: background-color 0.15s ease, transform 0.08s ease, box-shadow 0.08s ease; /* Nopeampi transitio */
     margin: 5px;
 }
 button:hover {
     background-color: #0EA5E9; 
 }
 button:active { 
-    background-color: color-mix(in srgb, var(--primary-color) 70%, black); 
-    transform: translateY(2px) scale(0.98); 
+    background-color: color-mix(in srgb, var(--primary-color) 50%, black); /* Tummempi */
+    transform: translateY(2px) scale(0.97); /* Hieman enemmän efektiä */
     box-shadow: none; 
 }
 button:disabled {
@@ -232,9 +232,9 @@ button:disabled {
 .nav-button.secondary-nav:hover {
     background-color: #475569;
 }
-.nav-button.secondary-nav:active { /* Oma active-tila, koska taustaväri eri */
-    background-color: color-mix(in srgb, var(--border-color) 70%, black);
-    transform: translateY(2px) scale(0.98); 
+.nav-button.secondary-nav:active { 
+    background-color: color-mix(in srgb, var(--border-color) 50%, black); /* Tummempi */
+    transform: translateY(2px) scale(0.97); 
     box-shadow: none; 
 }
 
@@ -353,7 +353,7 @@ button:disabled {
     display: none;
 }
 
-/* --- PELAAJAKORTIN PIENET TOIMINTONAPIT - MUUTETTU ACTIVE-TILA --- */
+/* --- PELAAJAKORTIN PIENET TOIMINTONAPIT - VOIMAKKAAMPI ACTIVE-TILA --- */
 .player-actions .action-btn-group button {
     flex-grow: 1; 
     flex-basis: 0; 
@@ -365,14 +365,14 @@ button:disabled {
     background-color: var(--accent-color-action);
     color: var(--text-color); 
     font-weight: 500; 
-    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.1s ease; /* Varmistetaan transitiot */
+    transition: background-color 0.15s ease, transform 0.08s ease, box-shadow 0.08s ease;
 }
 .player-actions .action-btn-group button:hover {
     background-color: color-mix(in srgb, var(--accent-color-action) 80%, var(--bg-color)); 
 }
 .player-actions .action-btn-group button:active { 
-    background-color: color-mix(in srgb, var(--accent-color-action) 60%, black); 
-    transform: translateY(2px) scale(0.98); 
+    background-color: color-mix(in srgb, var(--accent-color-action) 45%, black); /* Tummempi */
+    transform: translateY(2px) scale(0.97); 
     box-shadow: none;
 }
 /* --- PELAAJAKORTIN PIENET TOIMINTONAPIT PÄÄTTYVÄT --- */
@@ -402,7 +402,7 @@ button:disabled {
     flex-wrap: wrap; 
     gap: 5px; 
 }
-.sticky-game-controls button { /* Nämä ovat pääosin primary-värisiä */
+.sticky-game-controls button { 
     flex-grow: 1; 
     margin: 3px; 
     min-width: 100px; 
@@ -411,7 +411,7 @@ button:disabled {
 }
 /* sticky-game-controls button :active periytyy yleisestä */
 
-.sticky-game-controls .nav-button.secondary-nav { /* Nämä ovat eri värisiä */
+.sticky-game-controls .nav-button.secondary-nav { 
     background-color: var(--border-color); 
     color: var(--text-color);
     flex-basis: content; 
@@ -420,9 +420,9 @@ button:disabled {
 .sticky-game-controls .nav-button.secondary-nav:hover {
     background-color: #475569;
 }
-.sticky-game-controls .nav-button.secondary-nav:active { /* Oma active-tila */
-    background-color: color-mix(in srgb, var(--border-color) 70%, black);
-    transform: translateY(2px) scale(0.98); 
+.sticky-game-controls .nav-button.secondary-nav:active { 
+    background-color: color-mix(in srgb, var(--border-color) 50%, black); /* Tummempi */
+    transform: translateY(2px) scale(0.97); 
     box-shadow: none; 
 }
 
@@ -455,7 +455,7 @@ button:disabled {
     flex-grow: 1; 
 }
 
-/* --- HISTORIAN POISTONAPPI - MUUTETTU ACTIVE-TILA --- */
+/* --- HISTORIAN POISTONAPPI - VOIMAKKAAMPI ACTIVE-TILA --- */
 .remove-history-event-btn { 
     background-color: var(--accent-color-fouled-out);
     color: var(--text-color);
@@ -467,14 +467,14 @@ button:disabled {
     border: none;
     cursor: pointer;
     text-transform: none; 
-    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.1s ease;
+    transition: background-color 0.15s ease, transform 0.08s ease, box-shadow 0.08s ease;
 }
 .remove-history-event-btn:hover {
     background-color: color-mix(in srgb, var(--accent-color-fouled-out) 80%, black);
 }
 .remove-history-event-btn:active { 
-    background-color: color-mix(in srgb, var(--accent-color-fouled-out) 60%, black); 
-    transform: translateY(1px) scale(0.98); 
+    background-color: color-mix(in srgb, var(--accent-color-fouled-out) 45%, black); /* Tummempi */
+    transform: translateY(1px) scale(0.97); 
     box-shadow: none;
 }
 /* --- HISTORIAN POISTONAPPI PÄÄTTYVÄT --- */
@@ -544,6 +544,7 @@ button:disabled {
     font-size: 28px;
     font-weight: bold;
     line-height: 1;
+    transition: color 0.15s ease, transform 0.08s ease; /* Lisätty transitio */
 }
 .close-modal-btn:hover,
 .close-modal-btn:focus {
@@ -551,11 +552,9 @@ button:disabled {
     text-decoration: none;
     cursor: pointer;
 }
-/* Sulje-napin :active periytyy yleisestä button:active, mutta koska se ei ole <button>, se ei saa sitä.
-   Lisätään sille oma yksinkertainen :active, jos tarpeen. */
 .close-modal-btn:active {
-    transform: scale(0.95); /* Pieni kutistus */
-    color: var(--primary-color); /* Vaihdetaan väriä painaessa */
+    transform: scale(0.93); 
+    color: color-mix(in srgb, var(--primary-color) 70%, black); 
 }
 
 
