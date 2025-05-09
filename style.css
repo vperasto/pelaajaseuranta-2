@@ -10,6 +10,13 @@
     --accent-color-fouled-out: #F87171; 
     --border-color: #334155;
 
+    /* Uudet :active värit (voit säätää näitä) */
+    --primary-color-active: #27A0D9;
+    --accent-color-action-active: #D94A9D;
+    --accent-color-fouled-out-active: #E05252;
+    --border-color-active: #2C3A4C;
+
+
     --font-family-headings: 'Montserrat', sans-serif;
     --font-family-body: 'Roboto', sans-serif;
     --font-family-mono: 'Roboto Mono', 'Courier New', Courier, monospace;
@@ -178,7 +185,7 @@ input[type="text"]::placeholder, input[type="number"]::placeholder {
     color: #94A3B8;
 }
 
-/* --- YLEISET PAINIKKEET - VOIMAKKAAMPI ACTIVE-TILA --- */
+/* --- YLEISET PAINIKKEET - YKSINKERTAISTETTU ACTIVE-TILA --- */
 button {
     font-family: var(--font-family-body);
     font-weight: 500; 
@@ -191,15 +198,16 @@ button {
     font-size: 0.9rem; 
     text-transform: uppercase; 
     letter-spacing: 0.5px; 
-    transition: background-color 0.15s ease, transform 0.08s ease, box-shadow 0.08s ease; /* Nopeampi transitio */
+    transition: background-color 0.15s ease, transform 0.08s ease, box-shadow 0.08s ease; 
     margin: 5px;
+    -webkit-tap-highlight-color: transparent; /* Estää oletus highlightin kosketusnäytöillä */
 }
 button:hover {
-    background-color: #0EA5E9; 
+    background-color: #0EA5E9; /* Hieman vaaleampi hover-väri */
 }
 button:active { 
-    background-color: color-mix(in srgb, var(--primary-color) 50%, black); /* Tummempi */
-    transform: translateY(2px) scale(0.97); /* Hieman enemmän efektiä */
+    background-color: var(--primary-color-active); /* Käytetään uutta CSS-muuttujaa */
+    transform: translateY(2px) scale(0.97); 
     box-shadow: none; 
 }
 button:disabled {
@@ -223,7 +231,7 @@ button:disabled {
 .nav-button.primary-nav:hover {
     background-color: #0EA5E9;
 }
-/* Active-tila periytyy yleisestä button:active -säännöstä */
+/* .nav-button.primary-nav:active periytyy yleisestä button:active -säännöstä */
 
 .nav-button.secondary-nav { 
     background-color: var(--border-color);
@@ -233,7 +241,7 @@ button:disabled {
     background-color: #475569;
 }
 .nav-button.secondary-nav:active { 
-    background-color: color-mix(in srgb, var(--border-color) 50%, black); /* Tummempi */
+    background-color: var(--border-color-active); /* Käytetään uutta CSS-muuttujaa */
     transform: translateY(2px) scale(0.97); 
     box-shadow: none; 
 }
@@ -342,7 +350,7 @@ button:disabled {
     text-transform: none; 
     font-size: 0.75rem; 
     padding: 7px 9px; 
-    /* toggle-status-btn :active periytyy yleisestä, koska sillä on var(--primary-color) oletuksena */
+    /* .toggle-status-btn :active periytyy yleisestä, koska sillä on var(--primary-color) oletuksena */
 }
 
 .player-actions .action-btn-group {
@@ -353,7 +361,7 @@ button:disabled {
     display: none;
 }
 
-/* --- PELAAJAKORTIN PIENET TOIMINTONAPIT - VOIMAKKAAMPI ACTIVE-TILA --- */
+/* --- PELAAJAKORTIN PIENET TOIMINTONAPIT - YKSINKERTAISTETTU ACTIVE-TILA --- */
 .player-actions .action-btn-group button {
     flex-grow: 1; 
     flex-basis: 0; 
@@ -366,12 +374,14 @@ button:disabled {
     color: var(--text-color); 
     font-weight: 500; 
     transition: background-color 0.15s ease, transform 0.08s ease, box-shadow 0.08s ease;
+    -webkit-tap-highlight-color: transparent; 
 }
 .player-actions .action-btn-group button:hover {
-    background-color: color-mix(in srgb, var(--accent-color-action) 80%, var(--bg-color)); 
+    /* Käytetään color-mixiä edelleen hoverissa, koska se on hienovarainen ja toimii yleensä hyvin */
+    background-color: color-mix(in srgb, var(--accent-color-action) 85%, #0F172A 15%); /* Vaaleampi sekoitus taustaväriin */
 }
 .player-actions .action-btn-group button:active { 
-    background-color: color-mix(in srgb, var(--accent-color-action) 45%, black); /* Tummempi */
+    background-color: var(--accent-color-action-active); /* Käytetään uutta CSS-muuttujaa */
     transform: translateY(2px) scale(0.97); 
     box-shadow: none;
 }
@@ -421,7 +431,7 @@ button:disabled {
     background-color: #475569;
 }
 .sticky-game-controls .nav-button.secondary-nav:active { 
-    background-color: color-mix(in srgb, var(--border-color) 50%, black); /* Tummempi */
+    background-color: var(--border-color-active); /* Käytetään uutta CSS-muuttujaa */
     transform: translateY(2px) scale(0.97); 
     box-shadow: none; 
 }
@@ -455,7 +465,7 @@ button:disabled {
     flex-grow: 1; 
 }
 
-/* --- HISTORIAN POISTONAPPI - VOIMAKKAAMPI ACTIVE-TILA --- */
+/* --- HISTORIAN POISTONAPPI - YKSINKERTAISTETTU ACTIVE-TILA --- */
 .remove-history-event-btn { 
     background-color: var(--accent-color-fouled-out);
     color: var(--text-color);
@@ -468,12 +478,13 @@ button:disabled {
     cursor: pointer;
     text-transform: none; 
     transition: background-color 0.15s ease, transform 0.08s ease, box-shadow 0.08s ease;
+    -webkit-tap-highlight-color: transparent;
 }
 .remove-history-event-btn:hover {
-    background-color: color-mix(in srgb, var(--accent-color-fouled-out) 80%, black);
+    background-color: color-mix(in srgb, var(--accent-color-fouled-out) 85%, black 15%); /* Hieman tummempi hover */
 }
 .remove-history-event-btn:active { 
-    background-color: color-mix(in srgb, var(--accent-color-fouled-out) 45%, black); /* Tummempi */
+    background-color: var(--accent-color-fouled-out-active); /* Käytetään uutta CSS-muuttujaa */
     transform: translateY(1px) scale(0.97); 
     box-shadow: none;
 }
@@ -544,7 +555,8 @@ button:disabled {
     font-size: 28px;
     font-weight: bold;
     line-height: 1;
-    transition: color 0.15s ease, transform 0.08s ease; /* Lisätty transitio */
+    transition: color 0.15s ease, transform 0.08s ease; 
+    -webkit-tap-highlight-color: transparent;
 }
 .close-modal-btn:hover,
 .close-modal-btn:focus {
@@ -554,7 +566,7 @@ button:disabled {
 }
 .close-modal-btn:active {
     transform: scale(0.93); 
-    color: color-mix(in srgb, var(--primary-color) 70%, black); 
+    color: var(--primary-color-active); /* Käytetään uutta CSS-muuttujaa */
 }
 
 
