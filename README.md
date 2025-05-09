@@ -76,12 +76,15 @@ TAI
 *   "Tallenna/Lataa kokoonpano" -toiminto.
 *   Ja paljon muuta!
 
-## Osallistuminen
+## 🔒 Lisenssi
 
-Jos sinulla on parannusehdotuksia, löydät bugeja tai haluat muuten osallistua kehitykseen, voit:
-*   Luoda "Issue" tähän repositoryyn.
-*   Tehdä "Pull Request" omilla muutoksillasi.
+Creative Commons Attribution-NonCommercial 4.0 International License  
+Tämä työ on lisensoitu nimellä: **Vesa Perasto**  
+[Katso lisenssi](http://creativecommons.org/licenses/by-nc/4.0/)
 
 ---
 
-Toivottavasti tämä README on kattava ja informatiivinen! Voit vapaasti lisätä tai poistaa osioita tarpeen mukaan.
+## 🙌 Kiitokset
+
+Sovellus kehitetty omaksi avuksi ja muiden ohjaajien tueksi.  
+Jos teet muutoksia tai laajennuksia, säilytä alkuperäinen tekijämerkintä.
