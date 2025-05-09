@@ -2,8 +2,10 @@
 <html lang="fi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"> 
-    <title>Basket Tracker - Pelaajaseuranta, v1.1</title>
+    <!-- Lisää tämä rivi, jos haluat yrittää estää zoomauksen (lue aiemmat huomiot): -->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"> --> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pelaajaseuranta – Basket Tracker v1.1</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,14 +16,17 @@
 <body>
     <div class="container">
         <header>
-    <img src="logo_iso.png" alt="Pelaajaseuranta Logo" id="appLogo">
-    <h1>Pelaajaseuranta – Basket Tracker <span class="version-number">v1.1</span></h1>
-</header>
+            <img src="logo_iso.png" alt="Pelaajaseuranta Logo" id="appLogo">
+            <div class="header-text-content">
+                <h1>Pelaajaseuranta – Basket Tracker <span class="version-number">v1.1</span></h1>
+                <p class="header-info-text">Helppo työkalu junnukoriksen pelien ja pelaajien seurantaan.</p>
+            </div>
+        </header>
 
         <!-- Vaihe 1: Pelaajien syöttö & Pelin Asetukset -->
         <section id="setupView">
             <h2>Pelin Asetukset ja Pelaajat</h2>
-            <div class="game-setup-options"> <!-- Uusi kääre asetuksille -->
+            <div class="game-setup-options">
                 <div class="form-group">
                     <label for="gameName">Pelin nimi:</label>
                     <input type="text" id="gameName" placeholder="esim. Kobrat - Honsu">
