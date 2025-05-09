@@ -2,10 +2,10 @@
 <html lang="fi">
 <head>
     <meta charset="UTF-8">
-    <!-- Lisää tämä rivi, jos haluat yrittää estää zoomauksen (lue aiemmat huomiot): -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-    <title>Pelaajaseuranta – Basket Tracker</title>
+    <!-- Voit lisätä tämän, jos haluat kokeilla zoomauksen estoa: -->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"> --> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pelaajaseuranta – Basket Tracker v1.1</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,8 +20,8 @@
     		<div class="header-text-content">
         		<h1>Pelaajaseuranta – Basket Tracker</h1>
         		<p class="header-info-text">
-            	Juniorikoripallon pelitapahtumien ja pelaajasuoritusten reaaliaikainen seuranta.<br> <!-- Rivinvaihto -->
-            	<span class="developer-credit">Kehittäjä: Vesa Perasto | versio 1.1 | Ohjeet (tulossa)</span> <!-- Uusi span kehittäjälle -->
+            	Juniorikoripallon pelitapahtumien ja pelaajasuoritusten reaaliaikainen seuranta.<br>
+            	<span class="developer-credit">Kehittäjä: Vesa Perasto | versio 1.1 | <a href="#" id="openInstructionsLink">Ohjeet</a></span>
         		</p>
     		</div>
 		</header>
@@ -86,8 +86,50 @@
             </div>
             <button id="backToGameFromHistoryBtn" class="nav-button primary-nav">Palaa Pelin Seurantaan</button>
         </section>
-
     </div>
+
+    <!-- Ohjeiden Popup-ikkuna -->
+    <div id="instructionsModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal-btn" id="closeInstructionsBtn">×</span>
+            <h2>Käyttöohjeet – Pelaajaseuranta</h2>
+            <p>Tervetuloa käyttämään Pelaajaseurantaa!</p>
+            
+            <h3>1. Pelin Asetukset (Asetukset-näkymä)</h3>
+            <ul>
+                <li><strong>Pelin Nimi:</strong> Anna pelille kuvaava nimi.</li>
+                <li><strong>Pelaajia kentällä:</strong> Valitse, pelataanko 3v3, 4v4 vai 5v5. Tämä rajoittaa kentälle laitettavien pelaajien määrää.</li>
+                <li><strong>Pelaajien Lisäys:</strong> Syötä kunkin pelaajan nimi ja pelinumero ja paina "Lisää Pelaaja". Pelaajia voi poistaa listalta.</li>
+                <li>Kun asetukset ovat valmiit, siirry pelin seurantaan "Siirry Pelin Seurantaan" -napista.</li>
+            </ul>
+
+            <h3>2. Pelin Seuranta</h3>
+            <ul>
+                <li><strong>Pelin Aloitus:</strong> Paina "Aloita Peli". Aikaleima tallentuu.</li>
+                <li><strong>Pelikatko:</strong> "Aloita Katko" -napilla voit keskeyttää peliajan laskennan. "Jatka Peliä" jatkaa.</li>
+                <li><strong>Jakson Vaihto:</strong> "Jakso (QX)" -napilla siirryt seuraavalle jaksolle (1-4).</li>
+                <li><strong>Pelaajakortit:</strong>
+                    <ul>
+                        <li><strong>Kentälle/Penkille:</strong> Vaihda pelaajan tilaa. Vain kentällä oleville voi kirjata muita tapahtumia.</li>
+                        <li><strong>Toimintonapit (+1P, +2P, +3P, Virhe, Syöttö, Levypallo):</strong> Näkyvät vain kentällä olevalle pelaajalle.</li>
+                        <li><strong>5 Virhettä:</strong> Pelaaja poistuu automaattisesti pelistä saatuaan 5. virheen.</li>
+                    </ul>
+                </li>
+                <li><strong>Pelin Lopetus:</strong> Paina "Lopeta Peli".</li>
+                <li><strong>Navigaatio:</strong> Alapalkista pääset takaisin asetuksiin tai historia-näkymään.</li>
+            </ul>
+
+            <h3>3. Historia</h3>
+            <ul>
+                <li>Näyttää kaikki pelitapahtumat aikajärjestyksessä (uusin ensin).</li>
+                <li><strong>Tapahtuman Poisto:</strong> Voit poistaa virheellisen merkinnän "-" -napista rivin perässä.</li>
+                <li><strong>Kopioi Historia:</strong> Kopioi koko historian leikepöydälle.</li>
+                <li><strong>Tyhjennä Pelihistoria:</strong> Nollaa nykyisen pelin tapahtumat ja pelaajien tilastot, mutta säilyttää pelaajat ja peliasetukset seuraavaa peliä varten.</li>
+            </ul>
+            <p>Kaikki tiedot tallentuvat automaattisesti selaimeesi.</p>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

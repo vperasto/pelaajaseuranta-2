@@ -34,29 +34,27 @@ body {
 /* --- HEADER ALKAA --- */
 header {
     background-color: var(--surface-color);
-    padding: 15px 20px; /* Lisätty paddingia, kun logo on isompi */
+    padding: 15px 20px; 
     border-bottom: 1px solid var(--border-color);
     border-radius: 8px 8px 0 0;
     display: flex; 
     align-items: center; 
-    gap: 20px; /* Kasvatettu väliä logon ja tekstin välillä */
+    gap: 20px; 
 }
 
-/* Sovelluksen logo headerissa */
 #appLogo {
-    height: 140px; /* UUSI OLETUSKOKO */
+    height: 140px; 
     width: auto;  
     object-fit: contain; 
-    border-radius: 6px; /* Hieman isompi pyöristys isommalle logolle */
+    border-radius: 6px; 
     flex-shrink: 0; 
 }
 
-/* Kääre otsikolle ja infotekstille */
 .header-text-content {
     display: flex;
     flex-direction: column; 
     align-items: flex-start; 
-    flex-grow: 1; /* Sallii tekstisisällön viedä jäljellä olevan tilan */
+    flex-grow: 1; 
 }
 
 header h1 {
@@ -64,21 +62,21 @@ header h1 {
     font-weight: 700;
     color: var(--primary-color);
     margin: 0; 
-    font-size: 1.8rem; /* Kasvatettu hieman, kun logo on isompi */
+    font-size: 1.8rem; 
     line-height: 1.25; 
 }
-.version-number {
-    font-size: 0.65em; /* Säädetty suhteessa uuteen H1 kokoon */
+.version-number { /* Siirretty pois H1 sisältä HTML:ssä, mutta tyyli säilyy */
+    font-size: 0.65em; 
     color: var(--border-color);
     font-weight: 500;
-    display: block; /* Omalle rivilleen, jos H1 on pitkä */
-    margin-top: 2px;
+    display: inline; /* Jotta on samalla rivillä H1:n kanssa, jos mahtuu */
+    margin-left: 5px; /* Pieni väli H1 ja versionumeron välille */
 }
+/* Poistettu .version-number display: block ja margin-top, koska se on nyt osana .developer-credit */
 
-/* Infoteksti headerissa */
 .header-info-text {
     font-family: var(--font-family-body);
-    font-size: 0.85rem; /* Kasvatettu hieman */
+    font-size: 0.85rem; 
     color: var(--text-color);
     opacity: 0.85; 
     margin: 5px 0 0 0; 
@@ -86,12 +84,19 @@ header h1 {
     font-weight: 400;
 }
 
-/* Kehittäjän nimen tyyli */
 .developer-credit {
     font-size: 0.9em; 
     opacity: 0.7; 
     display: block; 
     margin-top: 3px; 
+}
+.developer-credit a#openInstructionsLink {
+    color: var(--primary-color);
+    text-decoration: underline;
+    cursor: pointer;
+}
+.developer-credit a#openInstructionsLink:hover {
+    color: #0EA5E9;
 }
 /* --- HEADER PÄÄTTYY --- */
 
@@ -436,8 +441,81 @@ button:disabled {
     background-color: color-mix(in srgb, var(--accent-color-fouled-out) 80%, black);
 }
 
-/* --- RESPONSIIVISUUS --- */
-@media (max-width: 768px) { /* Tabletit ja leveämmät puhelimet */
+/* MODAALI / POPUP-IKKUNAN TYYLIT */
+.modal {
+    position: fixed; 
+    z-index: 2000; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.6); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+.modal.hidden { 
+    display: none;
+}
+.modal-content {
+    background-color: var(--surface-color);
+    margin: auto; 
+    padding: 25px 30px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    width: 80%; 
+    max-width: 700px; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative; 
+    max-height: 85vh; 
+    overflow-y: auto; 
+}
+.modal-content h2 {
+    margin-top: 0;
+    color: var(--primary-color);
+    font-size: 1.6rem;
+}
+.modal-content h3 {
+    font-family: var(--font-family-headings);
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 5px;
+}
+.modal-content p, .modal-content li {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+.modal-content ul {
+    padding-left: 20px;
+    margin-bottom: 15px;
+}
+.modal-content ul li {
+    margin-bottom: 5px;
+}
+.close-modal-btn {
+    color: #aaa;
+    position: absolute; 
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1;
+}
+.close-modal-btn:hover,
+.close-modal-btn:focus {
+    color: var(--text-color);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* RESPONSIIVISUUS */
+@media (max-width: 768px) { 
     body {
         padding-bottom: 80px; 
     }
@@ -445,20 +523,18 @@ button:disabled {
         padding-bottom: 110px; 
     }
     header { 
-        gap: 15px; /* Säädetty gap tabletille */
-        padding: 10px 15px; /* Säädetty padding tabletille */
+        gap: 15px; 
+        padding: 10px 15px; 
     }
     #appLogo { 
-        height: 80px; /* Logon koko tabletissa */
+        height: 80px; 
     }
     header h1 {
-        font-size: 1.5rem; /* Otsikko tabletissa */
+        font-size: 1.5rem; 
     }
-    .version-number {
-        font-size: 0.6em;
-    }
+    /* .version-number poistettu erillisenä, koska se on nyt osana .developer-credit HTML:ssä */
     .header-info-text { 
-        font-size: 0.8rem; /* Infoteksti tabletissa */
+        font-size: 0.8rem; 
         margin-top: 4px;
     }
     .developer-credit {
@@ -466,7 +542,7 @@ button:disabled {
     }
 
     h2 { 
-        font-size: 1.4rem; /* H2 tabletissa */
+        font-size: 1.4rem; 
     }
     .sticky-game-controls button {
         min-width: calc(33.33% - 10px); 
@@ -493,9 +569,16 @@ button:disabled {
         width: 100%; 
         box-sizing: border-box; 
     }
+    .modal-content { /* Modaalille tabletissa */
+        width: 90%;
+        padding: 20px;
+    }
+    .modal-content h2 { font-size: 1.4rem; }
+    .modal-content h3 { font-size: 1.1rem; }
+    .modal-content p, .modal-content li { font-size: 0.85rem; }
 }
 
-@media (max-width: 480px) { /* Puhelimet */
+@media (max-width: 480px) { 
     body {
         padding-bottom: 100px; 
     }
@@ -503,27 +586,25 @@ button:disabled {
         padding-bottom: 120px; 
     }
     header { 
-        padding: 10px; /* Pienempi padding mobiilissa */
+        padding: 10px; 
         gap: 10px; 
-        flex-direction: column; /* Logo ja teksti allekkain mobiilissa */
-        align-items: center; /* Keskittää elementit kun ne ovat allekkain */
-        text-align: center; /* Keskittää tekstin kun se on omalla rivillään */
+        flex-direction: column; 
+        align-items: center; 
+        text-align: center; 
     }
     #appLogo { 
-        height: 70px; /* Logon koko mobiilissa */
-        margin-bottom: 5px; /* Pieni väli logon ja tekstin väliin */
+        height: 70px; 
+        margin-bottom: 5px; 
     }
     .header-text-content {
-        align-items: center; /* Keskittää H1 ja infotekstin */
+        align-items: center; 
     }
     header h1 {
-        font-size: 1.3rem; /* Otsikko mobiilissa */
+        font-size: 1.3rem; 
     }
-    .version-number {
-        font-size: 0.6em;
-    }
+    /* .version-number poistettu erillisenä */
     .header-info-text { 
-        font-size: 0.75rem; /* Infoteksti mobiilissa */
+        font-size: 0.75rem; 
         line-height: 1.3; 
         margin-top: 3px;
     }
@@ -532,7 +613,7 @@ button:disabled {
     }
 
     h2 { 
-        font-size: 1.2rem; /* H2 mobiilissa */
+        font-size: 1.2rem; 
     }
     .player-info h3 {
         font-size: 1rem; 

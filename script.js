@@ -15,8 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const togglePauseBtn = document.getElementById('togglePauseBtn'); 
 
     const gameNameInput = document.getElementById('gameName');
-    const maxPlayersOnCourtSetting = document.getElementById('maxPlayersOnCourtSetting'); // UUSI
+    const maxPlayersOnCourtSetting = document.getElementById('maxPlayersOnCourtSetting'); 
     const currentGameNameDisplay = document.getElementById('currentGameNameDisplay');
+
+    // Ohjeiden popup-elementit
+    const instructionsModal = document.getElementById('instructionsModal');
+    const openInstructionsLink = document.getElementById('openInstructionsLink');
+    const closeInstructionsBtn = document.getElementById('closeInstructionsBtn');
 
     const setupView = document.getElementById('setupView');
     const gameView = document.getElementById('gameView');
@@ -36,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isGamePaused: false, 
         lastPauseStartTime: null, 
         currentQuarter: 0, 
-        maxPlayersOnCourt: 5, // UUSI, oletus 5
+        maxPlayersOnCourt: 5, 
         startTime: null,
         endTime: null,
         quarterTimes: []
@@ -45,12 +50,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- DATAN HALLINTA ---
     function saveData() {
         appData.gameName = gameNameInput.value;
-        appData.maxPlayersOnCourt = parseInt(maxPlayersOnCourtSetting.value); // UUSI
-        localStorage.setItem('basketTrackerData_v1.1', JSON.stringify(appData)); // Muutettu avainta
+        appData.maxPlayersOnCourt = parseInt(maxPlayersOnCourtSetting.value); 
+        localStorage.setItem('basketTrackerData_v1.1', JSON.stringify(appData)); 
     }
 
     function loadData() {
-        const storedData = localStorage.getItem('basketTrackerData_v1.1'); // Muutettu avainta
+        const storedData = localStorage.getItem('basketTrackerData_v1.1'); 
         if (storedData) {
             appData = JSON.parse(storedData);
             if (appData.startTime) appData.startTime = new Date(appData.startTime);
@@ -62,13 +67,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             appData.isGamePaused = appData.isGamePaused || false;
             appData.lastPauseStartTime = appData.lastPauseStartTime || null;
-            appData.maxPlayersOnCourt = appData.maxPlayersOnCourt || 5; // UUSI: oletus jos puuttuu
+            appData.maxPlayersOnCourt = appData.maxPlayersOnCourt || 5; 
             appData.players.forEach(p => {
                 p.fouledOut = p.fouledOut || false;
             });
         }
         gameNameInput.value = appData.gameName || "";
-        maxPlayersOnCourtSetting.value = appData.maxPlayersOnCourt.toString(); // UUSI
+        maxPlayersOnCourtSetting.value = appData.maxPlayersOnCourt.toString(); 
         renderAll();
     }
 
@@ -114,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function renderPlayers() { // Pelaajien listaus setup-näkymässä
+    function renderPlayers() { 
         playerListDiv.innerHTML = '';
         if (appData.players.length === 0) {
             playerListDiv.innerHTML = '<p>Ei pelaajia. Lisää pelaajia yllä.</p>';
@@ -122,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         appData.players.forEach(player => {
             const card = document.createElement('div');
-            card.className = 'player-card'; // Käytetään samaa korttityyliä, mutta ilman toimintoja
+            card.className = 'player-card'; 
             card.innerHTML = `
                 <div class="player-info">
                     <h3>${player.name} (#${player.number})</h3>
@@ -164,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
             let toggleBtnDisabled = player.fouledOut ? 'disabled' : '';
             
             let actionButtonsHTML = '';
-            // Toimintonapit näytetään VAIN jos pelaaja on kentällä EIKÄ ole fouledOut
             if (player.onCourt && !player.fouledOut) {
                 actionButtonsHTML = `
                     <div class="action-btn-group">
@@ -179,21 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
             } 
-            // Jos pelaaja on fouledOut, mutta virheitä on alle X (esim. säännöt sallivat teknisen virheen lisäyksen, vaikka pelaaja olisi jo poistettu 5:llä henkilökohtaisella)
-            // TÄMÄ ON ERIKOISTAPAUS JA VOI OLLA MONIMUTKAINEN SÄÄNTÖJEN MUKAAN.
-            // YKSINKERTAISUUDEN VUOKSI VOIDAAN OLETTAA, ETTÄ FOUL OUT -TILASSA EI ENÄÄ ANNETA VIRHEITÄ TÄMÄN KAUTTA.
-            // JOS HALUTAAN SALLIA VIRHEEN ANTO FOUL OUT -TILASSA (ESIM. TEKNINEN):
-            /*
-            else if (player.fouledOut && player.fouls < 7) { // Esimerkki: max 7 virhettä yhteensä
-                 actionButtonsHTML = `
-                     <div class="action-btn-group">
-                        <button class="action-btn" data-id="${player.id}" data-action="foul">Virhe (Tekninen)</button> 
-                    </div>
-                `;
-            }
-            */
-            // Muussa tapauksessa (penkillä, ei fouledOut TAI fouledOut ja max virheet täynnä), actionButtonsHTML jää tyhjäksi.
-
 
             card.innerHTML = `
                 <div class="player-info">
@@ -233,8 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const player = appData.players.find(p => p.id === playerId);
         
         if (player && !player.fouledOut) {
-            // UUSI: Tarkistus kentällä olevien maksimimäärästä
-            if (!player.onCourt) { // Ollaan laittamassa pelaajaa kentälle
+            if (!player.onCourt) { 
                 const playersCurrentlyOnCourt = appData.players.filter(p => p.onCourt).length;
                 if (playersCurrentlyOnCourt >= appData.maxPlayersOnCourt) {
                     alert(`Kentällä voi olla enintään ${appData.maxPlayersOnCourt} pelaajaa! Ota ensin joku pois kentältä.`);
@@ -247,10 +235,10 @@ document.addEventListener('DOMContentLoaded', () => {
             logEvent({
                 type: 'SUBSTITUTION', playerId: player.id, playerName: player.name, playerNumber: player.number,
                 value: { oldStatus: oldStatus, newStatus: player.onCourt },
-                description: `#${player.number} ${player.name} | ${player.onCourt ? 'Kentälle' : 'Penkille'}`
+                descriptionDetails: `${player.onCourt ? 'Kentälle' : 'Penkille'}` // Muutettu käyttämään descriptionDetails
             });
             saveData();
-            renderGamePlayerList(); // renderAll() sijaan, koska vain tämä lista ja mahdollisesti historia muuttuu
+            renderGamePlayerList(); 
             renderHistory();
         }
     }
@@ -270,14 +258,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const player = appData.players.find(p => p.id === playerId);
 
         if (player) {
-            // Tarkistus siirretty renderGamePlayerList-logiikkaan (nappien piilotus/disablointi)
-            // mutta tuplavarmistus ei haittaa, erityisesti virheelle.
             if (player.fouledOut && player.fouls >= 5 && action === 'foul') {
                  alert(`Pelaaja #${player.number} ${player.name} on jo poistettu pelistä 5 virheen takia.`);
                  return;
             }
-            if (!player.onCourt && action !== 'foul' ) { 
-                alert(`Pelaaja #${player.number} ${player.name} ei ole kentällä. Vain virheen voi antaa penkillä olevalle.`);
+            // Toimintonapit piilotetaan jo, jos ei kentällä, joten tämä tarkistus on lisävarmistus
+            if (!player.onCourt) { 
+                alert(`Pelaaja #${player.number} ${player.name} ei ole kentällä. Toimintoja voi kirjata vain kentällä olevalle pelaajalle.`);
                 return;
             }
 
@@ -292,14 +279,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     eventDescriptionDetails = `Virhe (${player.fouls}. henkilökohtainen)`;
                     if (player.fouls >= 5 && !player.fouledOut) {
                         player.fouledOut = true;
-                        const wasOnCourt = player.onCourt;
+                        const wasOnCourt = player.onCourt; // Tämän pitäisi aina olla true tässä kohdassa
                         player.onCourt = false; 
                         eventDescriptionDetails += " - Poistettu pelistä (5 virhettä)!";
-                        if(wasOnCourt){ // Logitetaan penkille siirto vain jos oli kentällä
+                        if(wasOnCourt){ 
                              logEvent({
                                 type: 'SUBSTITUTION', playerId: player.id, playerName: player.name, playerNumber: player.number,
                                 value: { oldStatus: true, newStatus: false, reason: 'fouled_out' },
-                                description: `#${player.number} ${player.name} | Penkille (5 virhettä)`
+                                descriptionDetails: `Penkille (5 virhettä)` // Muutettu
                             });
                         }
                     }
@@ -310,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             logEvent({
                 type: eventType, playerId: player.id, playerName: player.name, playerNumber: player.number,
-                value: eventValue, descriptionDetails: eventDescriptionDetails // Lähetetään vain yksityiskohdat, kuvaus rakennetaan logEventissä
+                value: eventValue, descriptionDetails: eventDescriptionDetails 
             });
             saveData();
             renderGamePlayerList();
@@ -319,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- PELIN KULKU ---
-    function resetGameStatsAndState(keepPlayersAndSettings = false) { // Muutettu parametrin nimeä
+    function resetGameStatsAndState(keepPlayersAndSettings = false) { 
         appData.gameHistory = [];
         appData.gameStarted = false; appData.gameEnded = false; appData.isGamePaused = false;
         appData.lastPauseStartTime = null; appData.currentQuarter = 0; 
@@ -331,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         if (!keepPlayersAndSettings) {
             appData.players = []; appData.gameName = ""; gameNameInput.value = "";
-            appData.maxPlayersOnCourt = 5; maxPlayersOnCourtSetting.value = "5"; // Resetoidaan myös tämä
+            appData.maxPlayersOnCourt = 5; maxPlayersOnCourtSetting.value = "5"; 
         }
     }
     
@@ -348,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
         appData.gameStarted = true; appData.gameEnded = false; appData.isGamePaused = false;
         appData.startTime = new Date(); appData.currentQuarter = 1;
         appData.quarterTimes = [appData.startTime];
-        logEvent({ type: 'GAME_EVENT', descriptionMaster: "Peli alkoi" }); // Käytetään descriptionMasteria ohittamaan automaattinen rakennus
+        logEvent({ type: 'GAME_EVENT', descriptionMaster: "Peli alkoi" }); 
         saveData(); renderAll();
     });
 
@@ -410,7 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateQuarterDisplay() {
         const quarterText = appData.currentQuarter > 0 ? `Q${appData.currentQuarter}` : "Q1";
-        nextQuarterBtn.textContent = `Jakso (${quarterText})`; // Lyhennetty teksti
+        nextQuarterBtn.textContent = `Jakso (${quarterText})`; 
         if (appData.currentQuarter === 4) {
             nextQuarterBtn.textContent = `Jakso (Q4)`;
         }
@@ -423,17 +410,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const nameToShow = appData.gameName && appData.gameName.trim() !== "" ? appData.gameName.trim() : "Pelin Seuranta";
         currentGameNameDisplay.textContent = nameToShow;
     }
-    gameNameInput.addEventListener('input', saveData); // Tallenna heti kun nimi muuttuu
-    maxPlayersOnCourtSetting.addEventListener('change', saveData); // UUSI: Tallenna kun pelaajamäärä muuttuu
+    gameNameInput.addEventListener('input', saveData); 
+    maxPlayersOnCourtSetting.addEventListener('change', saveData); 
 
     // --- HISTORIA ---
     function logEvent(eventData) { 
         const timestamp = new Date();
         const timeString = timestamp.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         
-        let finalDescription = eventData.descriptionMaster || ""; // Käytä descriptionMasteria, jos annettu
+        let finalDescription = eventData.descriptionMaster || ""; 
 
-        if (!finalDescription) { // Rakenna kuvaus, jos descriptionMasteria ei ole
+        if (!finalDescription) { 
             let playerPrefix = "";
             if (eventData.playerId) {
                 const player = appData.players.find(p => p.id === eventData.playerId);
@@ -441,11 +428,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     playerPrefix = `#${player.number} ${player.name} | `;
                 }
             }
-            finalDescription = `${timeString} ${getCurrentQuarterForLog()} – ${playerPrefix}${eventData.descriptionDetails || eventData.type}`;
-        } else { // Jos descriptionMaster on annettu, varmista että siinä on aikaleima ja jakso
-            if (!finalDescription.includes(timeString) && (appData.gameStarted || eventData.type === 'GAME_EVENT')) {
+            finalDescription = `${timeString} ${getCurrentQuarterForLog()} – ${playerPrefix}${eventData.descriptionDetails || eventData.type || 'Tuntematon tapahtuma'}`;
+        } else { 
+            if (!finalDescription.includes(timeString) && (appData.gameStarted || eventData.type === 'GAME_EVENT' || eventData.type === 'PAUSE' || eventData.type === 'RESUME')) {
                  finalDescription = `${timeString} ${getCurrentQuarterForLog()} – ${finalDescription}`;
-            } else if (!finalDescription.includes(timeString) && eventData.type !== 'GAME_EVENT'){
+            } else if (!finalDescription.includes(timeString) && eventData.type !== 'GAME_EVENT' && eventData.type !== 'PAUSE' && eventData.type !== 'RESUME'){
                  finalDescription = `${timeString} ${getCurrentQuarterForLog()} – ${finalDescription}`;
             }
         }
@@ -453,16 +440,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const fullEventData = {
             id: generateEventId(),
             timestamp: timestamp,
-            quarter: getCurrentQuarterForLog(), // Tallennetaan oikea jakso numero tai teksti
-            description: finalDescription, // Lopullinen kuvaus
+            quarter: getCurrentQuarterForLog(), 
+            description: finalDescription, 
             ...eventData 
         };
-        delete fullEventData.descriptionDetails; // Ei tarvita enää erikseen
-        delete fullEventData.descriptionMaster; // Ei tarvita enää erikseen
+        delete fullEventData.descriptionDetails; 
+        delete fullEventData.descriptionMaster; 
 
         appData.gameHistory.push(fullEventData);
         renderHistory(); 
-        saveData(); 
+        // saveData(); // Poistettu tästä, koska logEvent kutsutaan usein paikoista, joissa saveData kutsutaan heti perään.
+                   // Tämä voi aiheuttaa tuplatallennuksia. Parempi kutsua saveDatat pääfunktioissa.
+                   // JOS huomataan, että jokin loggaus ei tallennu, tämä voidaan palauttaa.
     }
 
     function renderHistory() {
@@ -487,7 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
             entryDiv.appendChild(p);
 
             const nonRemovableTypes = ['GAME_EVENT', 'PAUSE', 'RESUME'];
-            if (!nonRemovableTypes.includes(event.type) && event.type) { // Tarkistetaan myös että event.type on olemassa
+            if (!nonRemovableTypes.includes(event.type) && event.type) { 
                 const removeBtn = document.createElement('button');
                 removeBtn.className = 'remove-history-event-btn';
                 removeBtn.textContent = '-';
@@ -523,7 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     break;
                 case 'ASSIST': player.assists = Math.max(0, player.assists - 1); break;
                 case 'REBOUND': player.rebounds = Math.max(0, player.rebounds - 1); break;
-                case 'SUBSTITUTION': /* Kuten aiemmin päätetty, ei automaattista onCourt-muutosta */ break;
+                case 'SUBSTITUTION': break;
             }
         }
         appData.gameHistory.splice(eventIndex, 1);
@@ -535,13 +524,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (appData.gameName && appData.gameName.trim() !== "") {
             historyText += `Peli: ${appData.gameName.trim()}\nMaksimipelaajia kentällä: ${appData.maxPlayersOnCourt}\n--------------------\n`;
         }
-        appData.gameHistory.forEach(event => { historyText += event.description + '\n'; }); // Alkuperäinen järjestys
+        appData.gameHistory.forEach(event => { historyText += event.description + '\n'; }); 
 
         if (navigator.clipboard) {
             navigator.clipboard.writeText(historyText.trim())
                 .then(() => alert('Historia kopioitu leikepöydälle!'))
                 .catch(err => alert('Kopiointi epäonnistui: ' + err));
-        } else { /* Fallback */ }
+        } else { 
+            const textArea = document.createElement("textarea");
+            textArea.value = historyText.trim();
+            document.body.appendChild(textArea);
+            textArea.focus(); textArea.select();
+            try { document.execCommand('copy'); alert('Historia kopioitu leikepöydälle!'); }
+            catch (err) { alert('Kopiointi epäonnistui: ' + err); }
+            document.body.removeChild(textArea);
+        }
     });
 
     clearGameHistoryBtn.addEventListener('click', () => {
@@ -553,13 +550,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // --- OHJEIDEN POPUP-IKKUNAN HALLINTA ---
+    if (openInstructionsLink && instructionsModal && closeInstructionsBtn) { 
+        openInstructionsLink.addEventListener('click', (e) => {
+            e.preventDefault(); 
+            instructionsModal.classList.remove('hidden');
+        });
+
+        closeInstructionsBtn.addEventListener('click', () => {
+            instructionsModal.classList.add('hidden');
+        });
+
+        instructionsModal.addEventListener('click', (e) => {
+            if (e.target === instructionsModal) { 
+                instructionsModal.classList.add('hidden');
+            }
+        });
+    } else {
+        console.warn("Ohjeiden popup-elementtejä ei löytynyt HTML:stä.");
+    }
+
     // --- NÄKYMIEN VAIHTO ---
     function showView(viewId) {
         [setupView, gameView, historyView].forEach(view => {
             view.classList.toggle('hidden', view.id !== viewId);
         });
-        if (viewId === 'gameView') { renderGamePlayerList(); updateCurrentGameNameDisplay(); }
+        // Päivitetään relevantit osat vain, kun näkymä aktivoituu
+        if (viewId === 'gameView') { renderGamePlayerList(); updateCurrentGameNameDisplay(); updatePauseButtonState(); updateGameControls(); updateQuarterDisplay(); }
         if (viewId === 'historyView') { renderHistory(); }
+        if (viewId === 'setupView') { renderPlayers(); } // Päivitä pelaajalista setup-näkymässäkin
     }
 
     navigateToGameBtn.addEventListener('click', () => {
