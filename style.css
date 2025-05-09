@@ -65,14 +65,13 @@ header h1 {
     font-size: 1.8rem; 
     line-height: 1.25; 
 }
-.version-number { /* Siirretty pois H1 sisältä HTML:ssä, mutta tyyli säilyy */
+.version-number {
     font-size: 0.65em; 
     color: var(--border-color);
     font-weight: 500;
-    display: inline; /* Jotta on samalla rivillä H1:n kanssa, jos mahtuu */
-    margin-left: 5px; /* Pieni väli H1 ja versionumeron välille */
+    display: inline; 
+    margin-left: 5px; 
 }
-/* Poistettu .version-number display: block ja margin-top, koska se on nyt osana .developer-credit */
 
 .header-info-text {
     font-family: var(--font-family-body);
@@ -179,6 +178,7 @@ input[type="text"]::placeholder, input[type="number"]::placeholder {
     color: #94A3B8;
 }
 
+/* --- YLEISET PAINIKKEET - MUUTETTU ACTIVE-TILA --- */
 button {
     font-family: var(--font-family-body);
     font-weight: 500; 
@@ -191,21 +191,25 @@ button {
     font-size: 0.9rem; 
     text-transform: uppercase; 
     letter-spacing: 0.5px; 
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.1s ease;
     margin: 5px;
 }
 button:hover {
     background-color: #0EA5E9; 
 }
-button:active {
-    transform: translateY(1px); 
+button:active { 
+    background-color: color-mix(in srgb, var(--primary-color) 70%, black); 
+    transform: translateY(2px) scale(0.98); 
+    box-shadow: none; 
 }
 button:disabled {
     background-color: #475569; 
     color: #94A3B8;
     cursor: not-allowed;
     transform: none;
+    box-shadow: none; 
 }
+/* --- YLEISET PAINIKKEET PÄÄTTYVÄT --- */
 
 .nav-button { 
     display: block;
@@ -219,12 +223,19 @@ button:disabled {
 .nav-button.primary-nav:hover {
     background-color: #0EA5E9;
 }
+/* Active-tila periytyy yleisestä button:active -säännöstä */
+
 .nav-button.secondary-nav { 
     background-color: var(--border-color);
     color: var(--text-color);
 }
 .nav-button.secondary-nav:hover {
     background-color: #475569;
+}
+.nav-button.secondary-nav:active { /* Oma active-tila, koska taustaväri eri */
+    background-color: color-mix(in srgb, var(--border-color) 70%, black);
+    transform: translateY(2px) scale(0.98); 
+    box-shadow: none; 
 }
 
 
@@ -241,6 +252,7 @@ button:disabled {
 .player-input-area button#addPlayerBtn {
     flex-shrink: 0; 
 }
+/* addPlayerBtn :active periytyy yleisestä */
 
 #playerList, #gamePlayerList {
     display: grid;
@@ -330,6 +342,7 @@ button:disabled {
     text-transform: none; 
     font-size: 0.75rem; 
     padding: 7px 9px; 
+    /* toggle-status-btn :active periytyy yleisestä, koska sillä on var(--primary-color) oletuksena */
 }
 
 .player-actions .action-btn-group {
@@ -340,6 +353,7 @@ button:disabled {
     display: none;
 }
 
+/* --- PELAAJAKORTIN PIENET TOIMINTONAPIT - MUUTETTU ACTIVE-TILA --- */
 .player-actions .action-btn-group button {
     flex-grow: 1; 
     flex-basis: 0; 
@@ -351,10 +365,17 @@ button:disabled {
     background-color: var(--accent-color-action);
     color: var(--text-color); 
     font-weight: 500; 
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.1s ease; /* Varmistetaan transitiot */
 }
 .player-actions .action-btn-group button:hover {
-    background-color: color-mix(in srgb, var(--accent-color-action) 80%, black);
+    background-color: color-mix(in srgb, var(--accent-color-action) 80%, var(--bg-color)); 
 }
+.player-actions .action-btn-group button:active { 
+    background-color: color-mix(in srgb, var(--accent-color-action) 60%, black); 
+    transform: translateY(2px) scale(0.98); 
+    box-shadow: none;
+}
+/* --- PELAAJAKORTIN PIENET TOIMINTONAPIT PÄÄTTYVÄT --- */
 
 
 .game-setup-controls, .history-controls { 
@@ -364,6 +385,7 @@ button:disabled {
     margin-bottom: 20px;
     align-items: center;
 }
+/* history-controls button :active periytyy yleisestä */
 
 .sticky-game-controls {
     position: fixed; 
@@ -380,14 +402,16 @@ button:disabled {
     flex-wrap: wrap; 
     gap: 5px; 
 }
-.sticky-game-controls button {
+.sticky-game-controls button { /* Nämä ovat pääosin primary-värisiä */
     flex-grow: 1; 
     margin: 3px; 
     min-width: 100px; 
     padding: 10px 8px; 
     font-size: 0.8rem; 
 }
-.sticky-game-controls .nav-button.secondary-nav {
+/* sticky-game-controls button :active periytyy yleisestä */
+
+.sticky-game-controls .nav-button.secondary-nav { /* Nämä ovat eri värisiä */
     background-color: var(--border-color); 
     color: var(--text-color);
     flex-basis: content; 
@@ -395,6 +419,11 @@ button:disabled {
 }
 .sticky-game-controls .nav-button.secondary-nav:hover {
     background-color: #475569;
+}
+.sticky-game-controls .nav-button.secondary-nav:active { /* Oma active-tila */
+    background-color: color-mix(in srgb, var(--border-color) 70%, black);
+    transform: translateY(2px) scale(0.98); 
+    box-shadow: none; 
 }
 
 
@@ -425,6 +454,8 @@ button:disabled {
     margin: 0;
     flex-grow: 1; 
 }
+
+/* --- HISTORIAN POISTONAPPI - MUUTETTU ACTIVE-TILA --- */
 .remove-history-event-btn { 
     background-color: var(--accent-color-fouled-out);
     color: var(--text-color);
@@ -436,10 +467,17 @@ button:disabled {
     border: none;
     cursor: pointer;
     text-transform: none; 
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.1s ease;
 }
 .remove-history-event-btn:hover {
     background-color: color-mix(in srgb, var(--accent-color-fouled-out) 80%, black);
 }
+.remove-history-event-btn:active { 
+    background-color: color-mix(in srgb, var(--accent-color-fouled-out) 60%, black); 
+    transform: translateY(1px) scale(0.98); 
+    box-shadow: none;
+}
+/* --- HISTORIAN POISTONAPPI PÄÄTTYVÄT --- */
 
 /* MODAALI / POPUP-IKKUNAN TYYLIT */
 .modal {
@@ -513,6 +551,13 @@ button:disabled {
     text-decoration: none;
     cursor: pointer;
 }
+/* Sulje-napin :active periytyy yleisestä button:active, mutta koska se ei ole <button>, se ei saa sitä.
+   Lisätään sille oma yksinkertainen :active, jos tarpeen. */
+.close-modal-btn:active {
+    transform: scale(0.95); /* Pieni kutistus */
+    color: var(--primary-color); /* Vaihdetaan väriä painaessa */
+}
+
 
 /* RESPONSIIVISUUS */
 @media (max-width: 768px) { 
@@ -532,7 +577,6 @@ button:disabled {
     header h1 {
         font-size: 1.5rem; 
     }
-    /* .version-number poistettu erillisenä, koska se on nyt osana .developer-credit HTML:ssä */
     .header-info-text { 
         font-size: 0.8rem; 
         margin-top: 4px;
@@ -569,7 +613,7 @@ button:disabled {
         width: 100%; 
         box-sizing: border-box; 
     }
-    .modal-content { /* Modaalille tabletissa */
+    .modal-content { 
         width: 90%;
         padding: 20px;
     }
@@ -602,7 +646,6 @@ button:disabled {
     header h1 {
         font-size: 1.3rem; 
     }
-    /* .version-number poistettu erillisenä */
     .header-info-text { 
         font-size: 0.75rem; 
         line-height: 1.3; 
