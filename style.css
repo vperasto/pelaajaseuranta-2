@@ -4,20 +4,24 @@
     --surface-color: #1E293B;
     --text-color: #F8FAFC;
     --primary-color: #38BDF8;
-    --secondary-color: #818CF8; 
+    /* --secondary-color: #818CF8; -- Ei enää käytössä */
     --accent-color-on-court: #4ADE80;
     --accent-color-action: #F472B6;
-    --accent-color-opponent: #F9A826; 
-    --accent-color-fouled-out: #F87171; 
+    --accent-color-opponent: #F9A826;
+    --accent-color-fouled-out: #F87171;
     --border-color: #334155;
+    --status-bench-border-color: #64748B; /* Lisätty takaisin vanhasta versiosta */
+
+    /* Hover värit yleisille napeille - Lisätty takaisin vanhasta */
+    --primary-color-hover: #0EA5E9;
+    --border-color-hover: #475569;
 
     /* Active värit */
     --primary-color-active: #27A0D9;
-    --accent-color-action-active: #D94A9D; /* Voit säätää tätä, esim. #9b3370 oli aiempi ehdotuksesi */
-    --accent-color-opponent-active: #E08E0B; 
+    --accent-color-action-active: #D94A9D;
+    --accent-color-opponent-active: #E08E0B;
     --accent-color-fouled-out-active: #E05252;
     --border-color-active: #2C3A4C;
-
 
     --font-family-headings: 'Montserrat', sans-serif;
     --font-family-body: 'Roboto', sans-serif;
@@ -29,7 +33,7 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     margin: 0;
-    padding: 0; 
+    padding: 0;
     line-height: 1.6;
     font-weight: 400;
 }
@@ -43,53 +47,53 @@ body {
 /* --- HEADER ALKAA --- */
 header {
     background-color: var(--surface-color);
-    padding: 15px 20px; 
+    padding: 15px 20px;
     border-bottom: 1px solid var(--border-color);
     border-radius: 8px 8px 0 0;
-    display: flex; 
-    align-items: center; 
-    gap: 20px; 
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
 #appLogo {
-    height: 140px; 
-    width: auto;  
-    object-fit: contain; 
-    border-radius: 6px; 
-    flex-shrink: 0; 
+    height: 140px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 6px;
+    flex-shrink: 0;
 }
 
 .header-text-content {
     display: flex;
-    flex-direction: column; 
-    align-items: flex-start; 
-    flex-grow: 1; 
+    flex-direction: column;
+    align-items: flex-start;
+    flex-grow: 1;
 }
 
 header h1 {
     font-family: var(--font-family-headings);
     font-weight: 700;
     color: var(--primary-color);
-    margin: 0; 
-    font-size: 1.8rem; 
-    line-height: 1.25; 
+    margin: 0;
+    font-size: 1.8rem;
+    line-height: 1.25;
 }
 
 .header-info-text {
-    font-family: var(--font-family-body);
-    font-size: 0.85rem; 
+    /* font-family periytyy body-elementiltä */
+    font-size: 0.85rem;
     color: var(--text-color);
-    opacity: 0.85; 
-    margin: 5px 0 0 0; 
-    line-height: 1.4; 
+    opacity: 0.85;
+    margin: 5px 0 0 0;
+    line-height: 1.4;
     font-weight: 400;
 }
 
 .developer-credit {
-    font-size: 0.9em; 
-    opacity: 0.7; 
-    display: block; 
-    margin-top: 3px; 
+    font-size: 0.9em;
+    opacity: 0.7;
+    display: block;
+    margin-top: 3px;
 }
 .developer-credit a#openInstructionsLink {
     color: var(--primary-color);
@@ -97,21 +101,21 @@ header h1 {
     cursor: pointer;
 }
 .developer-credit a#openInstructionsLink:hover {
-    color: #0EA5E9;
+    color: var(--primary-color-hover); /* Käytetään hover-muuttujaa */
 }
 /* --- HEADER PÄÄTTYY --- */
 
-h2 { 
+h2 {
     font-family: var(--font-family-headings);
     font-weight: 600;
     color: var(--primary-color);
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 10px;
-    margin-top: 15px; 
+    margin-top: 15px;
     margin-bottom: 15px;
-    font-size: 1.5rem; 
+    font-size: 1.5rem;
 }
-#setupView h3 { 
+#setupView h3 { /* Erityinen H3 asetusnäkymässä */
     font-family: var(--font-family-body);
     font-size: 0.9rem;
     color: var(--text-color);
@@ -120,21 +124,20 @@ h2 {
     font-weight: 500;
 }
 
-
-#setupView, #historyView, #gameView, #reportView { 
+#setupView, #historyView, #gameView, #reportView {
     background-color: var(--surface-color);
     padding: 15px;
-    border-radius: 0 0 8px 8px; 
-    margin-top: 0; 
+    border-radius: 0 0 8px 8px;
+    margin-top: 0;
 }
-#gameView, #reportView { 
-    padding-bottom: 90px; 
+#gameView, #reportView { /* Erityinen pohjatäyttö näkymille, joissa voi olla sticky footer */
+    padding-bottom: 90px;
 }
-.game-view-header { 
+.game-view-header {
     margin-bottom: 10px;
-    text-align: center; 
+    text-align: center;
 }
-.score-and-fouls-display { 
+.score-and-fouls-display {
     font-size: 0.9rem;
     color: var(--text-color);
     margin-top: 5px;
@@ -143,7 +146,7 @@ h2 {
     gap: 20px;
     flex-wrap: wrap;
 }
-.score-and-fouls-display span span { 
+.score-and-fouls-display span span { /* Korostettu arvo */
     font-weight: bold;
     color: var(--primary-color);
 }
@@ -153,7 +156,7 @@ h2 {
 .form-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 200px; }
 .form-group label { font-size: 0.9rem; color: var(--text-color); font-weight: 500;}
 .form-group input[type="text"], .form-group select { margin: 0; width: 100%; box-sizing: border-box; }
-select#maxPlayersOnCourtSetting { 
+select#maxPlayersOnCourtSetting {
     font-family: var(--font-family-body); background-color: var(--bg-color); color: var(--text-color);
     border: 1px solid var(--border-color); padding: 11px 15px; border-radius: 6px;
     font-size: 1rem; font-weight: 400;
@@ -168,22 +171,36 @@ input[type="text"], input[type="number"] {
 }
 input[type="text"]::placeholder, input[type="number"]::placeholder { color: #94A3B8; }
 
+/* --- YLEISET PAINIKKEET --- */
 button {
     font-family: var(--font-family-body); font-weight: 500; background-color: var(--primary-color);
     color: var(--bg-color); border: none; padding: 10px 18px; border-radius: 6px;
-    cursor: pointer; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; 
-    transition: background-color 0.15s ease, transform 0.08s ease, box-shadow 0.08s ease; 
-    margin: 5px; -webkit-tap-highlight-color: transparent; 
+    cursor: pointer; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;
+    transition: background-color 0.15s ease, transform 0.08s ease, box-shadow 0.08s ease;
+    margin: 5px; -webkit-tap-highlight-color: transparent;
 }
-button:hover { background-color: #0EA5E9; }
-button:active { background-color: var(--primary-color-active); transform: translateY(2px) scale(0.97); box-shadow: none; }
-button:disabled { background-color: #475569; color: #94A3B8; cursor: not-allowed; transform: none; box-shadow: none; }
+button:hover {
+    background-color: var(--primary-color-hover); /* Käytetään hover-muuttujaa */
+}
+button:active {
+    background-color: var(--primary-color-active); transform: translateY(2px) scale(0.97); box-shadow: none;
+}
+button:disabled {
+    background-color: #475569; color: #94A3B8; cursor: not-allowed; transform: none; box-shadow: none;
+}
+/* --- YLEISET PAINIKKEET PÄÄTTYVÄT --- */
 
 .nav-button { display: block; width: calc(100% - 10px); margin-top: 15px; }
 .nav-button.primary-nav { background-color: var(--primary-color); color: var(--bg-color); }
-.nav-button.primary-nav:hover { background-color: #0EA5E9; }
+.nav-button.primary-nav:hover {
+    background-color: var(--primary-color-hover); /* Käytetään hover-muuttujaa */
+}
+/* .nav-button.primary-nav:active periytyy yleisestä button:active -säännöstä */
+
 .nav-button.secondary-nav { background-color: var(--border-color); color: var(--text-color); }
-.nav-button.secondary-nav:hover { background-color: #475569; }
+.nav-button.secondary-nav:hover {
+    background-color: var(--border-color-hover); /* Käytetään hover-muuttujaa */
+}
 .nav-button.secondary-nav:active { background-color: var(--border-color-active); transform: translateY(2px) scale(0.97); box-shadow: none; }
 
 .player-input-area { display: flex; flex-wrap: wrap; align-items: center; margin-bottom: 20px; gap: 10px; }
@@ -193,20 +210,28 @@ button:disabled { background-color: #475569; color: #94A3B8; cursor: not-allowed
 #playerList, #gamePlayerList { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 15px; margin-top: 10px; }
 
 .player-card {
-    background-color: var(--bg-color); padding: 12px; border-radius: 8px; 
-    border: 1px solid var(--border-color); box-shadow: 0 2px 6px rgba(0,0,0,0.2); 
-    display: flex; flex-direction: column; 
+    background-color: var(--bg-color); padding: 12px; border-radius: 8px;
+    border: 1px solid var(--border-color); box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    display: flex; flex-direction: column;
+    transition: transform 0.15s ease, box-shadow 0.15s ease; /* Siirtymä hoverille */
 }
 .player-card:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.25); }
 .player-card.on-court { border-left: 5px solid var(--accent-color-on-court); background-color: color-mix(in srgb, var(--accent-color-on-court) 8%, var(--bg-color)); }
-.player-card.on-bench { border-left: 5px solid #64748B; }
-.player-card.fouled-out { 
-    border-left: 5px solid var(--accent-color-fouled-out); 
+.player-card.on-bench { border-left: 5px solid var(--status-bench-border-color); } /* Käytetään muuttujaa */
+.player-card.fouled-out {
+    border-left: 5px solid var(--accent-color-fouled-out);
     background-color: color-mix(in srgb, var(--accent-color-fouled-out) 8%, var(--bg-color));
-    opacity: 0.6; 
+    opacity: 0.6;
 }
+/* Lisätty !important vanhasta varmistamaan tyylit */
 .player-card.fouled-out .player-actions button,
-.player-card.fouled-out .toggle-status-btn { background-color: #475569 !important; cursor: not-allowed !important; color: #94A3B8 !important; }
+.player-card.fouled-out .toggle-status-btn {
+    background-color: #475569 !important;
+    cursor: not-allowed !important;
+    color: #94A3B8 !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
 
 .player-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 .player-info h3 { font-family: var(--font-family-headings); font-weight: 600; margin: 0; color: var(--text-color); font-size: 1.1rem; }
@@ -215,31 +240,31 @@ button:disabled { background-color: #475569; color: #94A3B8; cursor: not-allowed
 .player-stats { font-size: 0.75rem; color: #CBD5E1; display: block; margin-bottom: 8px; }
 
 .player-actions { margin-top: auto; display: flex; flex-direction: column; gap: 6px; }
-.player-card .toggle-status-btn { 
-    font-weight: 500; width: calc(100% - 6px); margin: 3px; order: -1; 
-    text-transform: none; font-size: 0.75rem; padding: 7px 9px; 
+.player-card .toggle-status-btn {
+    font-weight: 500; width: calc(100% - 6px); margin: 3px; order: -1;
+    text-transform: none; font-size: 0.75rem; padding: 7px 9px;
 }
 .player-actions .action-btn-group { display: flex; gap: 5px; }
 .player-actions .action-btn-group.hidden-actions { display: none; }
 .player-actions .action-btn-group button {
-    flex-grow: 1; flex-basis: 0; margin: 0; font-size: 0.7rem; padding: 6px 4px; 
+    flex-grow: 1; flex-basis: 0; margin: 0; font-size: 0.7rem; padding: 6px 4px;
     min-width: 0; text-transform: none; background-color: var(--accent-color-action);
-    color: var(--text-color); font-weight: 500; 
-    transition: background-color 0.15s ease, transform 0.08s ease, box-shadow 0.08s ease;
-    -webkit-tap-highlight-color: transparent; 
+    color: var(--text-color); font-weight: 500;
+    /* transition periytyy yleisestä button-säännöstä */
+    -webkit-tap-highlight-color: transparent;
 }
-.player-actions .action-btn-group button:hover { background-color: color-mix(in srgb, var(--accent-color-action) 85%, #0F172A 15%); }
+.player-actions .action-btn-group button:hover { background-color: color-mix(in srgb, var(--accent-color-action) 85%, var(--bg-color) 15%); }
 .player-actions .action-btn-group button:active { background-color: var(--accent-color-action-active); transform: translateY(2px) scale(0.97); box-shadow: none; }
 
-/* Vastustajan pistekontrollit */
+/* Vastustajan pistekontrollit (muokattu marginaalit ja reuna) */
 .opponent-score-controls {
-    margin: 15px auto; /* Keskittää, jos container on leveämpi */
+    margin: 15px auto; /* Keskittää vaakasuunnassa */
     padding: 10px;
     background-color: var(--bg-color);
     border-radius: 6px;
     text-align: center;
-    max-width: 300px; /* Rajoittaa leveyttä */
-    border: 1px solid var(--border-color);
+    max-width: 300px; /* Rajaaleveys */
+    border: 1px solid var(--border-color); /* Lisätty reuna */
 }
 .opponent-score-controls h4 {
     margin-top: 0; margin-bottom: 8px; font-family: var(--font-family-body);
@@ -247,49 +272,64 @@ button:disabled { background-color: #475569; color: #94A3B8; cursor: not-allowed
 }
 .opponent-score-controls .opponent-score-btn {
     background-color: var(--accent-color-opponent); color: var(--bg-color);
-    padding: 6px 12px; font-size: 0.8rem;
+    padding: 6px 12px; font-size: 0.8rem; margin: 3px; /* Lisätty margin */
 }
-.opponent-score-controls .opponent-score-btn:hover { background-color: color-mix(in srgb, var(--accent-color-opponent) 85%, #0F172A 15%); }
+.opponent-score-controls .opponent-score-btn:hover { background-color: color-mix(in srgb, var(--accent-color-opponent) 85%, var(--bg-color) 15%); }
 .opponent-score-controls .opponent-score-btn:active { background-color: var(--accent-color-opponent-active); transform: translateY(2px) scale(0.97); box-shadow: none; }
 
 
-.history-controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; align-items: center; }
+.game-setup-controls, .history-controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; align-items: center; }
 
 .sticky-game-controls {
     position: fixed; bottom: 0; left: 0; right: 0;
-    background-color: var(--surface-color); padding: 8px 5px; 
+    background-color: var(--surface-color); padding: 8px 5px;
     box-shadow: 0 -2px 7px rgba(0,0,0,0.25); z-index: 1000;
     display: flex; justify-content: space-around; align-items: center;
-    flex-wrap: wrap; gap: 5px; 
+    flex-wrap: wrap; gap: 5px;
 }
-.sticky-game-controls button { 
-    flex-grow: 1; margin: 3px; min-width: 90px; 
-    padding: 9px 7px; font-size: 0.75rem; 
+.sticky-game-controls button {
+    flex-grow: 1; margin: 3px; min-width: 90px;
+    padding: 9px 7px; font-size: 0.75rem;
 }
-.sticky-game-controls .nav-button.secondary-nav { 
+/* sticky-game-controls button:active periytyy yleisestä button:active -säännöstä */
+.sticky-game-controls .nav-button.secondary-nav {
     background-color: var(--border-color); color: var(--text-color);
-    flex-basis: content; flex-grow: 0.5; 
+    flex-basis: content; flex-grow: 0.5;
 }
-.sticky-game-controls .nav-button.secondary-nav:hover { background-color: #475569; }
+.sticky-game-controls .nav-button.secondary-nav:hover { background-color: var(--border-color-hover); } /* Käytetään hover-muuttujaa */
 .sticky-game-controls .nav-button.secondary-nav:active { background-color: var(--border-color-active); transform: translateY(2px) scale(0.97); box-shadow: none; }
 
 .history-log {
     background-color: var(--bg-color); border: 1px solid var(--border-color);
-    border-radius: 6px; padding: 15px; height: 280px; 
+    border-radius: 6px; padding: 15px; height: 280px;
     overflow-y: auto; font-family: var(--font-family-mono);
-    font-size: 0.85rem; color: #CBD5E1; 
+    font-size: 0.85rem; color: #CBD5E1;
 }
-.history-log-entry { 
+.history-log-entry {
     display: flex; justify-content: space-between; align-items: center;
     margin: 0 0 7px 0; padding-bottom: 4px; border-bottom: 1px dashed var(--border-color);
 }
+/* Lisätty otsikkorivin erikoismuotoilu */
+.history-log-entry.game-title-header {
+    justify-content: center; /* Keskittää otsikon */
+    border-bottom: 1px solid var(--primary-color);
+    margin-bottom: 10px; /* Lisää tilaa otsikon jälkeen */
+    padding-bottom: 6px;
+}
+.history-log-entry.game-title-header p {
+    font-weight: bold;
+    text-align: center;
+    flex-grow: 0; /* Estää p:tä täyttämästä koko tilaa */
+}
 .history-log-entry:last-child { border-bottom: none; margin-bottom: 0; }
 .history-log-entry p { margin: 0; flex-grow: 1; }
-.remove-history-event-btn { 
+
+/* Historian poistonappi */
+.remove-history-event-btn {
     background-color: var(--accent-color-fouled-out); color: var(--text-color);
     padding: 2px 7px; font-size: 0.75rem; border-radius: 4px;
     margin-left: 8px; line-height: 1; border: none; cursor: pointer;
-    text-transform: none; 
+    text-transform: none;
     transition: background-color 0.15s ease, transform 0.08s ease, box-shadow 0.08s ease;
     -webkit-tap-highlight-color: transparent;
 }
@@ -299,15 +339,15 @@ button:disabled { background-color: #475569; color: #94A3B8; cursor: not-allowed
 /* MODAALI */
 .modal {
     position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
-    overflow: auto; background-color: rgba(0,0,0,0.6); 
-    display: flex; align-items: center; justify-content: center; 
+    overflow: auto; background-color: rgba(0,0,0,0.6);
+    display: flex; align-items: center; justify-content: center;
 }
 .modal.hidden { display: none; }
 .modal-content {
     background-color: var(--surface-color); margin: auto; padding: 25px 30px;
     border: 1px solid var(--border-color); border-radius: 8px;
     width: 80%; max-width: 700px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    position: relative; max-height: 85vh; overflow-y: auto; 
+    position: relative; max-height: 85vh; overflow-y: auto;
 }
 .modal-content h2 { margin-top: 0; color: var(--primary-color); font-size: 1.6rem; }
 .modal-content h3 {
@@ -321,82 +361,97 @@ button:disabled { background-color: #475569; color: #94A3B8; cursor: not-allowed
 .close-modal-btn {
     color: #aaa; position: absolute; top: 10px; right: 15px;
     font-size: 28px; font-weight: bold; line-height: 1;
-    transition: color 0.15s ease, transform 0.08s ease; 
+    transition: color 0.15s ease, transform 0.08s ease;
     -webkit-tap-highlight-color: transparent;
+    background: none; border: none; padding: 0; cursor: pointer; /* Varmistukset */
 }
-.close-modal-btn:hover, .close-modal-btn:focus { color: var(--text-color); text-decoration: none; cursor: pointer; }
+.close-modal-btn:hover, .close-modal-btn:focus { color: var(--text-color); text-decoration: none; }
 .close-modal-btn:active { transform: scale(0.93); color: var(--primary-color-active); }
 
-/* --- RAPORTTINÄKYMÄN TYYLIT ALKAVAT --- */
-#reportView h2 { /* Raportin pääotsikko */
+/* --- RAPORTTINÄKYMÄN TYYLIT ALKAVAT (Uudet/muokatut) --- */
+#reportView h2 {
     text-align: center;
     margin-bottom: 20px;
 }
-#reportView h2 span#reportGameNameDisplay { /* Pelin nimi raportin otsikossa */
+#reportView h2 span#reportGameNameDisplay { /* Pelin nimi raportin otsikon alla */
     display: block;
-    font-size: 0.8em; /* Hieman pienempi kuin pääotsikko */
+    font-size: 0.8em; /* Suhteessa h2 kokoon */
     color: var(--text-color);
     font-weight: 500;
     margin-top: 5px;
 }
 
-.report-summary {
-    background-color: var(--bg-color); /* Hieman eri tausta erottumaan */
+.report-summary { /* Yhteenvedon laatikko */
+    background-color: var(--bg-color); /* Erottuu näkymän taustasta */
     padding: 15px;
     border-radius: 6px;
     margin-bottom: 20px;
     border: 1px solid var(--border-color);
+    display: grid; /* Grid layout yhteenvedolle */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsiiviset sarakkeet */
+    gap: 10px;
 }
 .report-summary p {
     margin: 5px 0;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: var(--text-color);
+    background-color: var(--surface-color); /* Taustaväri yksittäisille tiedoille */
+    padding: 8px;
+    border-radius: 4px;
 }
-.report-summary p span { /* Korostetaan arvot yhteenvedossa */
+.report-summary p strong { /* Selite */
+    font-weight: normal; /* Ei boldausta, jos span on bold */
+    opacity: 0.8;
+    display: block;
+    margin-bottom: 3px;
+}
+.report-summary p span { /* Varsinainen arvo */
     font-weight: bold;
     color: var(--primary-color);
+    display: block;
+    margin-top: 2px;
 }
 
-#reportTableContainer {
-    overflow-x: auto; /* Mahdollistaa vaakavierityksen taulukolle pienillä näytöillä */
+#reportTableContainer { /* Sallii taulukon vierityksen vaakatasossa */
+    overflow-x: auto;
+    margin-top: 10px; /* Pieni eroitus yhteenvetoon */
 }
 
 #reportContent table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px; /* Pienennetty hieman */
     font-size: 0.85rem; /* Hieman pienempi fontti taulukossa */
 }
 #reportContent th, #reportContent td {
     border: 1px solid var(--border-color);
-    padding: 6px 8px; /* Hieman tiiviimpi padding soluissa */
+    padding: 6px 8px; /* Pienennetty padding */
     text-align: left;
-    vertical-align: middle;
+    vertical-align: middle; /* Keskittää solun sisällön pystysuunnassa */
 }
 #reportContent th {
-    background-color: var(--bg-color); /* Sama kuin raportin yhteenveto */
+    background-color: var(--bg-color); /* Erottuu paremmin */
     color: var(--primary-color);
     font-weight: 600;
-    position: sticky; /* Sticky header taulukolle, jos sisältö vierii pystysuunnassa */
-    top: 0; /* Vaatii, että #reportTableContainer on vieritettävä */
-    z-index: 10;
+    position: sticky; /* Kiinnittää otsikkorivin yläreunaan vierittäessä */
+    top: -1px; /* Pieni säätö, ettei jää rakoa */
+    z-index: 10; /* Varmistaa, että otsikko on päällimmäisenä */
 }
 #reportContent td {
-    font-family: var(--font-family-mono); 
+    font-family: var(--font-family-mono); /* Tilastot monospacella */
 }
-#reportContent td.player-name-report { /* Pelaajan nimi -sarake normaalilla fontilla */
+#reportContent td.player-name-report { /* Pelaajan nimi raportissa */
     font-family: var(--font-family-body);
     font-weight: 500;
-    white-space: nowrap; /* Estää nimen rivittymisen, jos tarpeen */
+    white-space: nowrap; /* Estää nimen rivittymisen (voi muuttaa, jos nimet pitkiä) */
 }
-#reportContent td.numeric-stat { /* Numerot oikealle, jos halutaan */
+#reportContent td.numeric-stat { /* Numeroille oikea tasaus */
     text-align: right;
 }
 /* --- RAPORTTINÄKYMÄN TYYLIT PÄÄTTYVÄT --- */
 
 
 /* RESPONSIIVISUUS */
-@media (max-width: 768px) { 
+@media (max-width: 768px) {
     body { padding-bottom: 80px; }
     #gameView, #reportView { padding-bottom: 110px; }
     header { gap: 15px; padding: 10px 15px; }
@@ -405,26 +460,37 @@ button:disabled { background-color: #475569; color: #94A3B8; cursor: not-allowed
     .header-info-text { font-size: 0.8rem; margin-top: 4px; }
     .developer-credit { margin-top: 2px; }
     h2 { font-size: 1.4rem; }
-    .sticky-game-controls button { min-width: calc(20% - 10px); font-size: 0.7rem; padding: 8px 4px;} /* Säädetty 5 napille */
-    /* .sticky-game-controls .nav-button.secondary-nav { flex-basis: calc(20% - 10px); } Poistettu, annetaan flex-grow hoitaa */
 
+    /* Muokattu sticky controls nappien kokoa 768px näkymässä */
+    .sticky-game-controls button {
+        flex: 1 1 auto; /* Sallii kasvun ja kutistumisen */
+        min-width: calc(20% - 8px); /* 5 nappia rinnakkain (20%) miinus gap */
+        font-size: 0.7rem;
+        padding: 8px 4px; /* Hieman vähemmän paddingia */
+    }
 
     .history-controls, .game-setup-options { flex-direction: column; align-items: stretch; gap: 15px; }
-    .history-controls button, .form-group input[type="text"], .form-group select { width: 100%; box-sizing: border-box; }
+    .history-controls button,
+    .form-group input[type="text"],
+    .form-group select {
+        width: 100%; box-sizing: border-box;
+    }
+    .form-group input[type="text"], .form-group input[type="number"] { margin-right: 0; } /* Nollataan */
+
     .modal-content { width: 90%; padding: 20px; }
     .modal-content h2 { font-size: 1.4rem; }
     .modal-content h3 { font-size: 1.1rem; }
     .modal-content p, .modal-content li { font-size: 0.85rem; }
+
     .opponent-score-controls .opponent-score-btn { padding: 5px 10px; font-size: 0.75rem; }
-    
-    /* Raportin responsiivisuus tabletille */
-    .report-summary p { font-size: 0.9rem; }
+
+    /* Raportin responsiivisuus 768px */
+    .report-summary p { font-size: 0.85rem; }
     #reportContent table { font-size: 0.8rem; }
     #reportContent th, #reportContent td { padding: 5px 6px; }
-
 }
 
-@media (max-width: 480px) { 
+@media (max-width: 480px) {
     body { padding-bottom: 100px; }
     #gameView, #reportView { padding-bottom: 120px; }
     header { padding: 10px; gap: 10px; flex-direction: column; align-items: center; text-align: center; }
@@ -436,12 +502,25 @@ button:disabled { background-color: #475569; color: #94A3B8; cursor: not-allowed
     .player-info h3 { font-size: 1rem; }
     #playerList, #gamePlayerList { grid-template-columns: 1fr; gap: 8px; }
     .player-card { padding: 10px; }
-    button { padding: 8px 12px; font-size: 0.8rem; }
+    button { padding: 8px 12px; font-size: 0.8rem; } /* Yleinen pienennys */
     .player-card .toggle-status-btn { font-size: 0.7rem; padding: 6px 8px; }
     .player-actions .action-btn-group button { font-size: 0.65rem; padding: 5px 3px; }
-    .sticky-game-controls { padding: 6px 3px; }
-    .sticky-game-controls button { padding: 8px 5px; font-size: 0.6rem; min-width: calc(25% - 6px); letter-spacing: 0; } /* Tiiviimpi mobiilissa */
-    /* .sticky-game-controls .nav-button.secondary-nav { min-width: calc(33.33% - 8px); } Poistettu */
+
+    /* Muokattu sticky controls 480px */
+    .sticky-game-controls {
+        padding: 6px 3px;
+        flex-wrap: wrap; /* Varmistetaan rivitys */
+        justify-content: center; /* Keskittää napit, jos eivät täytä riviä */
+    }
+    .sticky-game-controls button {
+        padding: 8px 5px;
+        font-size: 0.65rem;
+        /* Asetetaan flex-basis jakamaan tilaa (esim. 3 nappia per rivi) */
+        flex-grow: 0; /* Ei kasvateta */
+        flex-shrink: 0; /* Ei kutisteta */
+        flex-basis: calc(33% - 6px); /* 3 nappia (33%) miinus gap/2 per nappi */
+        min-width: 0; /* Ylikirjoitetaan aiempi min-width */
+    }
 
     .history-log-entry p { font-size: 0.75rem; }
     .remove-history-event-btn { padding: 2px 5px; font-size: 0.65rem; }
@@ -449,12 +528,12 @@ button:disabled { background-color: #475569; color: #94A3B8; cursor: not-allowed
     .opponent-score-controls h4 {font-size: 0.8rem;}
     .opponent-score-controls .opponent-score-btn { padding: 4px 8px; font-size: 0.7rem; }
 
-    /* Raportin responsiivisuus mobiilille */
+    /* Raportin responsiivisuus 480px */
     #reportView h2 { font-size: 1.1rem; }
     #reportView h2 span#reportGameNameDisplay { font-size: 0.7em; }
-    .report-summary { padding: 10px; }
+    .report-summary { padding: 10px; grid-template-columns: 1fr; } /* Yksi sarake */
     .report-summary p { font-size: 0.8rem; }
-    #reportContent table { font-size: 0.75rem; }
-    #reportContent th, #reportContent td { padding: 4px 5px; }
-    #reportContent td.player-name-report { white-space: normal; } /* Salli nimen rivitys mobiilissa */
+    #reportContent table { font-size: 0.7rem; } /* Pienennetty vielä mobiilissa */
+    #reportContent th, #reportContent td { padding: 3px 4px; }
+    #reportContent td.player-name-report { white-space: normal; } /* Sallitaan nimen rivitys */
 }
