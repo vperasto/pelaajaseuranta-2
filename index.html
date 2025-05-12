@@ -2,7 +2,7 @@
 <html lang="fi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Pelaajaseuranta – Basket Tracker v1.2</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +19,7 @@
         		<h1>Pelaajaseuranta – Basket Tracker</h1>
         		<p class="header-info-text">
             	Juniorikoripallon pelitapahtumien ja pelaajasuoritusten reaaliaikainen seuranta.<br>
-            	<span class="developer-credit">Kehittäjä: Vesa Perasto | <a href="#" id="openInstructionsLink">Ohjeet</a></span>
+            	<span class="developer-credit">Kehittäjä: Vesa Perasto | v1.2 | <a href="#" id="openInstructionsLink">Ohjeet</a></span>
         		</p>
     		</div>
 		</header>
@@ -81,20 +81,28 @@
             <div class="sticky-game-controls">
                 <button id="startGameBtn">Aloita Peli</button>
                 <button id="togglePauseBtn" disabled>Aloita Katko</button>
-                <button id="nextQuarterBtn" disabled>Aloita Q1</button> <!-- Teksti muuttuu dynaamisesti -->
+                <button id="nextQuarterBtn" disabled>Aloita Q1</button>
                 <button id="endGameBtn" disabled>Lopeta Peli</button>
-                <button id="navigateToReportBtn" class="nav-button secondary-nav">Raportti</button> <!-- UUSI Raportti-nappi -->
+                <button id="navigateToReportBtn" class="nav-button secondary-nav">Raportti</button>
                 <button id="navigateToHistoryBtn" class="nav-button secondary-nav">Historia</button>
                 <button id="navigateToSetupBtn" class="nav-button secondary-nav">Asetukset</button>
             </div>
         </section>
         
-        <!-- UUSI: Vaihe 4: Raportti-näkymä (perusrakenne) -->
+        <!-- UUSI/PÄIVITETTY: Vaihe 4: Raportti-näkymä -->
         <section id="reportView" class="hidden">
-            <h2>Ottelun Raportti <span id="reportGameNameDisplay"></span></h2>
-            <div id="reportContent">
-                <p>Raportin sisältö ja peliaikataulukko tulee tähän myöhemmin...</p>
-                <!-- Tähän tulee taulukko pelaajien statseista ja peliajoista -->
+            <h2>Ottelun Raportti: <span id="reportGameNameDisplay"></span></h2>
+            
+            <div class="report-summary">
+                <p>Pelin tila: <span id="reportGameStatus">Ei aloitettu</span></p>
+                <p>Kokonaispeliaika: <span id="reportTotalGameTime">00:00</span></p>
+                <p>Pisteet: <span id="reportHomeScore">0</span> - <span id="reportOpponentScore">0</span></p>
+                <p>Kotijoukkueen virheet: <span id="reportHomeFouls">0</span></p>
+            </div>
+
+            <div id="reportTableContainer">
+                <!-- Taulukko generoidaan tänne JavaScriptillä -->
+                <p>Ladataan pelaajadataa...</p> 
             </div>
             <button id="backToGameFromReportBtn" class="nav-button primary-nav">Palaa Pelin Seurantaan</button>
         </section>
@@ -110,7 +118,7 @@
             <div id="gameHistoryLog" class="history-log">
                 <!-- Tapahtumalogit tulevat tänne -->
             </div>
-            <button id="backToGameFromHistoryBtnReport" class="nav-button primary-nav">Palaa Pelin Seurantaan</button> <!-- Nimi muutettu sekaannuksen välttämiseksi -->
+            <button id="backToGameFromHistoryBtnReport" class="nav-button primary-nav">Palaa Pelin Seurantaan</button>
         </section>
     </div>
 
@@ -134,7 +142,7 @@
                 <li><strong>Pelin Aloitus:</strong> Paina "Aloita Peli".</li>
                 <li><strong>Vastustajan Pisteet:</strong> Kirjaa vastustajan pisteet omista napeistaan.</li>
                 <li><strong>Pelikatko:</strong> "Aloita Katko" / "Jatka Peliä" -napilla. Pisteitä ja vaihtoja voi tehdä katkon aikana.</li>
-                <li><strong>Jakson Vaihto:</strong> "Aloita Jakso QX" / "Päätä Jakso QX". Jakson päättäminen siirtää pelin automaattisesti katkolle.</li>
+                <li><strong>Jakson Vaihto:</strong> "Aloita Jakso QX" / "Päätä Jakso QX". Jakson päättäminen EI automaattisesti siirrä peliä katkolle. Käytä erillistä "Aloita Katko" -nappia tarvittaessa.</li>
                 <li><strong>Pelaajakortit:</strong> Toimintonapit näkyvät vain kentällä olevalle pelaajalle. 5 virhettä poistaa pelaajan pelistä.</li>
                 <li><strong>Pelin Lopetus:</strong> Paina "Lopeta Peli".</li>
                 <li><strong>Navigaatio:</strong> Alapalkista pääset asetuksiin, raporttiin tai historiaan.</li>
@@ -143,7 +151,7 @@
             <h3>3. Historia & Raportti</h3>
             <ul>
                 <li><strong>Historia:</strong> Näyttää kaikki pelitapahtumat. Voit poistaa virheellisen merkinnän.</li>
-                <li><strong>Raportti (Tulossa):</strong> Tähän tulee myöhemmin yhteenveto pelistä ja pelaajien peliajoista.</li>
+                <li><strong>Raportti:</strong> Näyttää yhteenvedon pelistä, pelaajien tilastot ja peliajat. Päivittyy pelin edetessä.</li>
                 <li><strong>Kopioi Historia / Tyhjennä Pelihistoria:</strong> Toimivat kuten ennen.</li>
             </ul>
             <p>Kaikki tiedot tallentuvat automaattisesti selaimeesi.</p>
