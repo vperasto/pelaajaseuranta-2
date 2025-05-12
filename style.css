@@ -537,3 +537,84 @@ button:disabled {
     #reportContent th, #reportContent td { padding: 3px 4px; }
     #reportContent td.player-name-report { white-space: normal; } /* Sallitaan nimen rivitys */
 }
+
+/* --- RAPORTTINÄKYMÄN TAULUKON TYYLIT ALKAVAT --- */
+
+#reportTableContainer {
+    overflow-x: auto; /* Sallii vaakavierityksen, jos taulukko on leveä */
+    margin-top: 20px; /* Tilaa yhteenvetolaatikon jälkeen */
+    margin-bottom: 15px; /* Tilaa ennen "Palaa peliin" -nappia */
+    border: 1px solid var(--border-color); /* Kehys containerille */
+    border-radius: 6px; /* Pyöristetyt kulmat */
+    /* Lisätään pieni varjo korostamaan */
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+#reportTableContainer table {
+    width: 100%; /* Täyttää containerin leveyden */
+    border-collapse: collapse; /* Poistaa solujen väliset tuplarajat */
+    font-size: 0.85rem; /* Hieman pienempi fonttikoko taulukossa */
+    background-color: var(--surface-color); /* Taulukon taustaväri */
+}
+
+/* Kaikki solut (otsikko ja data) */
+#reportTableContainer th,
+#reportTableContainer td {
+    border: 1px solid var(--border-color); /* Solujen reunaviivat */
+    padding: 8px 10px; /* Solujen sisäinen täyttö (väli) */
+    text-align: left; /* Oletustasaus vasemmalle */
+    vertical-align: middle; /* Keskittää sisällön pystysuunnassa */
+    white-space: nowrap; /* Estää oletuksena rivittymisen, voi poistaa tarvittaessa */
+}
+
+/* Otsikkosolut (th) */
+#reportTableContainer thead th {
+    background-color: var(--bg-color); /* Erottuva taustaväri otsikkoriville */
+    color: var(--primary-color); /* Otsikon tekstin väri */
+    font-weight: 600; /* Lihavoitu otsikkoteksti */
+    position: sticky; /* Kiinnittää otsikkorivin yläreunaan vierittäessä */
+    top: 0; /* Kiinnityskohta */
+    z-index: 10; /* Varmistaa, että otsikko pysyy päällimmäisenä */
+    border-bottom-width: 2px; /* Korostaa otsikkorivin alareunaa */
+}
+
+/* Datarivit (tbody tr) */
+#reportTableContainer tbody tr {
+    transition: background-color 0.15s ease; /* Pehmeä siirtymä hoverille */
+}
+
+/* Datarivien hover-tila */
+#reportTableContainer tbody tr:hover {
+    background-color: color-mix(in srgb, var(--primary-color) 8%, var(--surface-color)); /* Hienovarainen korostus hoverilla */
+}
+
+/* Vuorottelevat rivivärit (parantaa luettavuutta) - Voi poistaa, jos et halua */
+#reportTableContainer tbody tr:nth-child(odd) {
+    background-color: var(--bg-color); /* Hiukan eri sävy parittomille riveille */
+}
+#reportTableContainer tbody tr:nth-child(odd):hover {
+     background-color: color-mix(in srgb, var(--primary-color) 12%, var(--bg-color)); /* Hover-väri parittomille */
+}
+
+/* Pelaajan nimi -solu */
+#reportTableContainer td.player-name-report {
+    font-family: var(--font-family-body); /* Käyttää perusfonttia */
+    font-weight: 500; /* Hieman vahvempi kuin normaali data */
+    text-align: left; /* Varmistetaan vasen tasaus */
+    white-space: normal; /* Sallitaan nimen rivitys tarvittaessa (jos nowrappiä ei haluta) */
+                         /* Jos haluat estää rivityksen, poista tämä tai kommentoi pois */
+}
+
+/* Numeeriset tilastot -solut */
+#reportTableContainer td.numeric-stat {
+    font-family: var(--font-family-mono); /* Monospace-fontti numeroille */
+    text-align: right; /* Tasaus oikealle numeroille */
+}
+
+/* Voit lisätä erikoistyylejä tietyille sarakkeille tarvittaessa, esim: */
+/* #reportTableContainer td:nth-child(3), */ /* Pisteet-sarake */
+/* #reportTableContainer th:nth-child(3) { */
+/*     min-width: 40px;  */ /* Esimerkki minimileveydestä */
+/* } */
+
+/* --- RAPORTTINÄKYMÄN TAULUKON TYYLIT PÄÄTTYVÄT --- */
