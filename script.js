@@ -14,11 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearGameHistoryBtn = document.getElementById('clearGameHistoryBtn');
     const togglePauseBtn = document.getElementById('togglePauseBtn'); 
 
-    const gameNameInput = document.getElementById('gameName');
+    const homeTeamNameInput = document.getElementById('homeTeamNameInput'); // UUSI
+    const awayTeamNameInput = document.getElementById('awayTeamNameInput'); // UUSI
     const maxPlayersOnCourtSetting = document.getElementById('maxPlayersOnCourtSetting'); 
     const currentGameNameDisplay = document.getElementById('currentGameNameDisplay');
+    const homeScoreDisplay = document.getElementById('homeScoreDisplay'); // UUSI
+    const opponentScoreDisplay = document.getElementById('opponentScoreDisplay'); // UUSI
+    const homeFoulsDisplay = document.getElementById('homeFoulsDisplay'); // UUSI
 
-    // Ohjeiden popup-elementit
     const instructionsModal = document.getElementById('instructionsModal');
     const openInstructionsLink = document.getElementById('openInstructionsLink');
     const closeInstructionsBtn = document.getElementById('closeInstructionsBtn');
@@ -26,53 +29,69 @@ document.addEventListener('DOMContentLoaded', () => {
     const setupView = document.getElementById('setupView');
     const gameView = document.getElementById('gameView');
     const historyView = document.getElementById('historyView');
+    const reportView = document.getElementById('reportView'); // UUSI
+    const reportGameNameDisplay = document.getElementById('reportGameNameDisplay'); // UUSI
+    const reportContent = document.getElementById('reportContent'); // UUSI
+
 
     const navigateToGameBtn = document.getElementById('navigateToGameBtn');
     const navigateToSetupBtn = document.getElementById('navigateToSetupBtn');
     const navigateToHistoryBtn = document.getElementById('navigateToHistoryBtn');
-    const backToGameFromHistoryBtn = document.getElementById('backToGameFromHistoryBtn');
+    const navigateToReportBtn = document.getElementById('navigateToReportBtn'); // UUSI
+    const backToGameFromHistoryBtnReport = document.getElementById('backToGameFromHistoryBtnReport');
+    const backToGameFromReportBtn = document.getElementById('backToGameFromReportBtn'); // UUSI
+
 
     let appData = {
-        gameName: "",
+        homeTeamName: "Kobrat", // UUSI
+        awayTeamName: "",       // UUSI
         players: [],
         gameHistory: [], 
-        gameStarted: false,
-        gameEnded: false,
-        isGamePaused: false, 
-        lastPauseStartTime: null, 
-        currentQuarter: 0, 
+        gameStarted: false, gameEnded: false, isGamePaused: false, 
+        lastPauseStartTime: null, currentQuarter: 0, 
         maxPlayersOnCourt: 5, 
-        startTime: null,
-        endTime: null,
-        quarterTimes: []
+        opponentScore: 0,       // UUSI
+        startTime: null, endTime: null, quarterTimes: []
+        // Peliaikaan liittyvät kentät lisätään myöhemmin pelaajaobjekteihin ja appDataan
     };
 
     // --- DATAN HALLINTA ---
     function saveData() {
-        appData.gameName = gameNameInput.value;
+        appData.homeTeamName = homeTeamNameInput.value.trim() || "Kotijoukkue"; // Varmistetaan oletusnimi
+        appData.awayTeamName = awayTeamNameInput.value.trim() || "Vierasjoukkue"; // Varmistetaan oletusnimi
         appData.maxPlayersOnCourt = parseInt(maxPlayersOnCourtSetting.value); 
-        localStorage.setItem('basketTrackerData_v1.1', JSON.stringify(appData)); 
+        localStorage.setItem('basketTrackerData_v1.2', JSON.stringify(appData)); 
     }
 
     function loadData() {
-        const storedData = localStorage.getItem('basketTrackerData_v1.1'); 
+        const storedData = localStorage.getItem('basketTrackerData_v1.2'); 
         if (storedData) {
-            appData = JSON.parse(storedData);
+            const loaded = JSON.parse(storedData);
+            // Yhdistetään ladattu data oletusrakenteeseen puuttuvien kenttien varalta
+            appData = { ...appData, ...loaded }; 
+
             if (appData.startTime) appData.startTime = new Date(appData.startTime);
             if (appData.endTime) appData.endTime = new Date(appData.endTime);
             if (appData.lastPauseStartTime) appData.lastPauseStartTime = new Date(appData.lastPauseStartTime);
             appData.quarterTimes = appData.quarterTimes.map(t => t ? new Date(t) : null);
-            appData.gameHistory.forEach(event => {
-                if (event.timestamp) event.timestamp = new Date(event.timestamp);
-            });
-            appData.isGamePaused = appData.isGamePaused || false;
-            appData.lastPauseStartTime = appData.lastPauseStartTime || null;
-            appData.maxPlayersOnCourt = appData.maxPlayersOnCourt || 5; 
-            appData.players.forEach(p => {
+            if (appData.gameHistory && Array.isArray(appData.gameHistory)) {
+                appData.gameHistory.forEach(event => {
+                    if (event.timestamp) event.timestamp = new Date(event.timestamp);
+                });
+            } else {
+                appData.gameHistory = []; // Varmistetaan, että on taulukko
+            }
+            appData.players.forEach(p => { // Varmistetaan pelaajien oletuskentät
                 p.fouledOut = p.fouledOut || false;
+                p.points = p.points || 0;
+                p.fouls = p.fouls || 0;
+                p.assists = p.assists || 0;
+                p.rebounds = p.rebounds || 0;
+                p.onCourt = p.onCourt || false;
             });
         }
-        gameNameInput.value = appData.gameName || "";
+        homeTeamNameInput.value = appData.homeTeamName || "Kobrat";
+        awayTeamNameInput.value = appData.awayTeamName || "";
         maxPlayersOnCourtSetting.value = appData.maxPlayersOnCourt.toString(); 
         renderAll();
     }
@@ -82,18 +101,28 @@ document.addEventListener('DOMContentLoaded', () => {
         renderGamePlayerList();
         renderHistory();
         updateGameControls();
-        updateQuarterDisplay();
-        updateCurrentGameNameDisplay();
+        updateHeaderDisplays(); // Yhdistetty päivitysfunktio headerille
         updatePauseButtonState();
+        // renderReportView(); // Kutsutaan tarvittaessa kun raporttinäkymä on aktiivinen
     }
+    
+    function updateHeaderDisplays() { // UUSI funktio
+        updateCurrentGameNameDisplay();
+        updateScoreDisplay();
+        updateFoulDisplay();
+        updateQuarterDisplay(); // Siirretty tänne, koska nextQuarterBtn teksti riippuu pelin tilasta
+    }
+
 
     // --- APUFUNKTIOT ---
     function generateEventId() {
-        return `evt_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+        return `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`; // Pidennetty hieman satunnaisuutta
     }
 
     function getCurrentQuarterForLog() {
-        if (!appData.gameStarted || appData.currentQuarter === 0) return "Pelinvalmistelu";
+        if (!appData.gameStarted || appData.currentQuarter === 0) return "Ennen peliä";
+        if (appData.gameEnded && appData.currentQuarter === 4) return "Pelin jälkeen"; // Tarkennus
+        if (appData.isGamePaused && appData.quarterTimes.length === appData.currentQuarter && appData.currentQuarter > 0) return `Jakso Q${appData.currentQuarter} (Tauko)`; // Jaksojen välinen tauko
         return `Q${appData.currentQuarter}`;
     }
 
@@ -104,8 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const number = playerNumberInput.value.trim();
         if (name && number) {
             if (appData.players.find(p => p.number === number)) {
-                alert('Pelaaja tällä numerolla on jo olemassa!');
-                return;
+                alert('Pelaaja tällä numerolla on jo olemassa!'); return;
             }
             appData.players.push({
                 id: `p_${Date.now()}`, name, number, onCourt: false,
@@ -114,18 +142,18 @@ document.addEventListener('DOMContentLoaded', () => {
             playerNameInput.value = ''; playerNumberInput.value = '';
             saveData();
             renderPlayers(); renderGamePlayerList();
-        } else {
-            alert('Syötä pelaajan nimi ja numero.');
-        }
+        } else { alert('Syötä pelaajan nimi ja numero.'); }
     });
 
     function renderPlayers() { 
         playerListDiv.innerHTML = '';
         if (appData.players.length === 0) {
-            playerListDiv.innerHTML = '<p>Ei pelaajia. Lisää pelaajia yllä.</p>';
-            return;
+            playerListDiv.innerHTML = '<p>Ei pelaajia. Lisää pelaajia yllä.</p>'; return;
         }
-        appData.players.forEach(player => {
+        // Järjestetään pelaajat numeron mukaan setup-näkymässä
+        const sortedSetupPlayers = [...appData.players].sort((a,b) => parseInt(a.number) - parseInt(b.number));
+
+        sortedSetupPlayers.forEach(player => {
             const card = document.createElement('div');
             card.className = 'player-card'; 
             card.innerHTML = `
@@ -142,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const playerId = e.target.dataset.id;
                 appData.players = appData.players.filter(p => p.id !== playerId);
                 saveData();
-                renderPlayers(); renderGamePlayerList();
+                renderPlayers(); renderGamePlayerList(); updateHeaderDisplays(); // Päivitä myös laskurit, jos pelaaja poistetaan
             });
         });
     }
@@ -150,24 +178,17 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderGamePlayerList() {
         gamePlayerListDiv.innerHTML = '';
         if (appData.players.length === 0) {
-            gamePlayerListDiv.innerHTML = '<p>Lisää pelaajia ensin Asetukset-näkymässä.</p>';
-            return;
+            gamePlayerListDiv.innerHTML = '<p>Lisää pelaajia ensin Asetukset-näkymässä.</p>'; return;
         }
-
         const sortedPlayers = [...appData.players].sort((a, b) => {
-            if (a.onCourt !== b.onCourt) {
-                return b.onCourt - a.onCourt; 
-            }
+            if (a.onCourt !== b.onCourt) { return b.onCourt - a.onCourt; }
             return parseInt(a.number) - parseInt(b.number);
         });
-
         sortedPlayers.forEach(player => {
             const card = document.createElement('div');
             card.className = `player-card ${player.onCourt ? 'on-court' : 'on-bench'} ${player.fouledOut ? 'fouled-out' : ''}`;
-            
             let fouledOutIndicator = player.fouledOut ? '<span class="player-fouled-out-indicator">5 VIRHETTÄ</span>' : '';
             let toggleBtnDisabled = player.fouledOut ? 'disabled' : '';
-            
             let actionButtonsHTML = '';
             if (player.onCourt && !player.fouledOut) {
                 actionButtonsHTML = `
@@ -183,93 +204,66 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
             } 
-
             card.innerHTML = `
-                <div class="player-info">
-                    <h3>${player.name} (#${player.number})</h3>
-                    ${fouledOutIndicator}
-                </div>
+                <div class="player-info"><h3>${player.name} (#${player.number})</h3>${fouledOutIndicator}</div>
                 <span class="player-stats">P: ${player.points} | V: ${player.fouls} | S: ${player.assists} | L: ${player.rebounds}</span>
                 <div class="player-actions">
-                    <button class="toggle-status-btn" data-id="${player.id}" ${toggleBtnDisabled}>
-                        ${player.onCourt ? 'Penkille' : 'Kentälle'}
-                    </button>
+                    <button class="toggle-status-btn" data-id="${player.id}" ${toggleBtnDisabled}>${player.onCourt ? 'Penkille' : 'Kentälle'}</button>
                     ${actionButtonsHTML}
-                </div>
-            `;
+                </div>`;
             gamePlayerListDiv.appendChild(card);
         });
-
-        document.querySelectorAll('.toggle-status-btn').forEach(button => {
-            button.addEventListener('click', handleToggleStatus);
-        });
-        document.querySelectorAll('.action-btn').forEach(button => {
-            button.addEventListener('click', handlePlayerAction);
-        });
+        document.querySelectorAll('.toggle-status-btn').forEach(b => b.addEventListener('click', handleToggleStatus));
+        document.querySelectorAll('.action-btn').forEach(b => b.addEventListener('click', handlePlayerAction));
     }
 
     function handleToggleStatus(event) {
         if (event.target.disabled) return;
-        if (!appData.gameStarted || appData.gameEnded || appData.isGamePaused) {
-            let message = "Toiminto ei sallittu: ";
-            if (!appData.gameStarted && appData.currentQuarter === 0) message += "Peli ei ole alkanut.";
-            else if (appData.gameEnded) message += "Peli on päättynyt.";
-            else if (appData.isGamePaused) message += "Peli on tauolla.";
-            alert(message);
-            return;
+        // Peli voi olla paussilla (esim. jakson vaihto), mutta vaihtoja voi tehdä
+        if ((!appData.gameStarted && appData.currentQuarter === 0) || appData.gameEnded) {
+            alert("Toiminto ei sallittu: Peli ei ole käynnissä tai on päättynyt."); return;
         }
         const playerId = event.target.dataset.id;
         const player = appData.players.find(p => p.id === playerId);
-        
         if (player && !player.fouledOut) {
             if (!player.onCourt) { 
                 const playersCurrentlyOnCourt = appData.players.filter(p => p.onCourt).length;
                 if (playersCurrentlyOnCourt >= appData.maxPlayersOnCourt) {
-                    alert(`Kentällä voi olla enintään ${appData.maxPlayersOnCourt} pelaajaa! Ota ensin joku pois kentältä.`);
-                    return;
+                    alert(`Kentällä voi olla enintään ${appData.maxPlayersOnCourt} pelaajaa! Ota ensin joku pois kentältä.`); return;
                 }
             }
-
             const oldStatus = player.onCourt;
             player.onCourt = !player.onCourt;
             logEvent({
-                type: 'SUBSTITUTION', playerId: player.id, playerName: player.name, playerNumber: player.number,
-                value: { oldStatus: oldStatus, newStatus: player.onCourt },
-                descriptionDetails: `${player.onCourt ? 'Kentälle' : 'Penkille'}` // Muutettu käyttämään descriptionDetails
+                type: 'SUBSTITUTION', playerId: player.id,
+                descriptionDetails: `${player.onCourt ? 'Kentälle' : 'Penkille'}`
             });
-            saveData();
-            renderGamePlayerList(); 
-            renderHistory();
+            saveData(); renderGamePlayerList(); renderHistory();
         }
     }
 
     function handlePlayerAction(event) {
         if (event.target.disabled) return;
-         if (!appData.gameStarted || appData.gameEnded || appData.isGamePaused) {
-            let message = "Toiminto ei sallittu: ";
-            if (!appData.gameStarted && appData.currentQuarter === 0) message += "Peli ei ole alkanut.";
-            else if (appData.gameEnded) message += "Peli on päättynyt.";
-            else if (appData.isGamePaused) message += "Peli on tauolla.";
-            alert(message);
-            return;
+        if ((!appData.gameStarted && appData.currentQuarter === 0) || appData.gameEnded) {
+            alert("Toiminto ei sallittu: Peli ei ole käynnissä tai on päättynyt."); return;
         }
         const playerId = event.target.dataset.id;
         const action = event.target.dataset.action;
         const player = appData.players.find(p => p.id === playerId);
-
         if (player) {
-            if (player.fouledOut && player.fouls >= 5 && action === 'foul') {
-                 alert(`Pelaaja #${player.number} ${player.name} on jo poistettu pelistä 5 virheen takia.`);
-                 return;
+            const allowedDuringPause = ['1p', '2p', '3p', 'foul'];
+            if (appData.isGamePaused && !allowedDuringPause.includes(action)) {
+                alert("Toiminto ei sallittu pelikatkon aikana (paitsi pisteet ja virheet)."); return;
             }
-            // Toimintonapit piilotetaan jo, jos ei kentällä, joten tämä tarkistus on lisävarmistus
-            if (!player.onCourt) { 
-                alert(`Pelaaja #${player.number} ${player.name} ei ole kentällä. Toimintoja voi kirjata vain kentällä olevalle pelaajalle.`);
-                return;
+            // Toimintonapit piilotetaan, jos ei kentällä, mutta virhe on poikkeus
+            if (!player.onCourt && action !== 'foul') {
+                 alert(`Pelaaja #${player.number} ${player.name} ei ole kentällä.`); return;
+            }
+            if (player.fouledOut && player.fouls >= 5 && action === 'foul') {
+                 alert(`Pelaaja #${player.number} ${player.name} on jo poistettu pelistä 5 virheen takia.`); return;
             }
 
             let eventType = '', eventValue = null, eventDescriptionDetails = "";
-
             switch (action) {
                 case '1p': eventType = 'SCORE'; eventValue = 1; player.points += 1; eventDescriptionDetails = "1p tehty"; break;
                 case '2p': eventType = 'SCORE'; eventValue = 2; player.points += 2; eventDescriptionDetails = "2p tehty"; break;
@@ -278,82 +272,122 @@ document.addEventListener('DOMContentLoaded', () => {
                     eventType = 'FOUL'; player.fouls += 1;
                     eventDescriptionDetails = `Virhe (${player.fouls}. henkilökohtainen)`;
                     if (player.fouls >= 5 && !player.fouledOut) {
-                        player.fouledOut = true;
-                        const wasOnCourt = player.onCourt; // Tämän pitäisi aina olla true tässä kohdassa
-                        player.onCourt = false; 
+                        player.fouledOut = true; const wasOnCourt = player.onCourt; player.onCourt = false; 
                         eventDescriptionDetails += " - Poistettu pelistä (5 virhettä)!";
                         if(wasOnCourt){ 
-                             logEvent({
-                                type: 'SUBSTITUTION', playerId: player.id, playerName: player.name, playerNumber: player.number,
-                                value: { oldStatus: true, newStatus: false, reason: 'fouled_out' },
-                                descriptionDetails: `Penkille (5 virhettä)` // Muutettu
-                            });
+                             logEvent({ type: 'SUBSTITUTION', playerId: player.id, descriptionDetails: `Penkille (5 virhettä)` });
                         }
                     }
                     break;
                 case 'assist': eventType = 'ASSIST'; player.assists += 1; eventDescriptionDetails = "Syöttö"; break;
                 case 'rebound': eventType = 'REBOUND'; player.rebounds += 1; eventDescriptionDetails = "Levypallo"; break;
             }
-            
-            logEvent({
-                type: eventType, playerId: player.id, playerName: player.name, playerNumber: player.number,
-                value: eventValue, descriptionDetails: eventDescriptionDetails 
-            });
-            saveData();
-            renderGamePlayerList();
-            renderHistory();
+            logEvent({ type: eventType, playerId: player.id, value: eventValue, descriptionDetails: eventDescriptionDetails });
+            saveData(); renderGamePlayerList(); updateHeaderDisplays(); renderHistory();
         }
     }
+
+    // --- VASTUSTAJAN PISTEIDEN KÄSITTELY ---
+    document.querySelectorAll('.opponent-score-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            if (!appData.gameStarted || appData.gameEnded) {
+                 alert("Peli ei ole käynnissä tai on jo päättynyt."); return;
+            }
+            // Sallitaan vastustajan pisteiden kirjaus myös katkolla
+            const points = parseInt(e.target.dataset.points);
+            appData.opponentScore += points;
+            logEvent({
+                type: 'OPPONENT_SCORE',
+                value: points,
+                descriptionMaster: `Vastustaja +${points}p` // Käytetään masteria, koska ei liity pelaajaan
+            });
+            saveData();
+            updateScoreDisplay();
+            renderHistory();
+        });
+    });
+
 
     // --- PELIN KULKU ---
     function resetGameStatsAndState(keepPlayersAndSettings = false) { 
         appData.gameHistory = [];
         appData.gameStarted = false; appData.gameEnded = false; appData.isGamePaused = false;
         appData.lastPauseStartTime = null; appData.currentQuarter = 0; 
+        appData.opponentScore = 0; // Nollaa myös vastustajan pisteet
         appData.startTime = null; appData.endTime = null; appData.quarterTimes = [];
-
-        appData.players.forEach(player => {
-            player.onCourt = false; player.points = 0; player.fouls = 0;
-            player.assists = 0; player.rebounds = 0; player.fouledOut = false;
+        appData.players.forEach(p => {
+            p.onCourt = false; p.points = 0; p.fouls = 0;
+            p.assists = 0; p.rebounds = 0; p.fouledOut = false;
         });
         if (!keepPlayersAndSettings) {
-            appData.players = []; appData.gameName = ""; gameNameInput.value = "";
+            appData.players = []; 
+            appData.homeTeamName = "Kobrat"; homeTeamNameInput.value = "Kobrat";
+            appData.awayTeamName = ""; awayTeamNameInput.value = "";
             appData.maxPlayersOnCourt = 5; maxPlayersOnCourtSetting.value = "5"; 
         }
     }
     
     startGameBtn.addEventListener('click', () => {
-        if (appData.players.length === 0) {
-            alert("Lisää pelaajia ennen pelin aloittamista."); return;
-        }
-        if (appData.gameStarted && !appData.gameEnded) {
-            alert("Peli on jo käynnissä."); return;
-        }
+        if (appData.players.length === 0) { alert("Lisää pelaajia."); return; }
+        if (appData.gameStarted && !appData.gameEnded) { alert("Peli on jo käynnissä."); return; }
+        
         if (appData.gameEnded || (!appData.gameStarted && appData.startTime === null)) { 
             resetGameStatsAndState(true); 
         }
         appData.gameStarted = true; appData.gameEnded = false; appData.isGamePaused = false;
-        appData.startTime = new Date(); appData.currentQuarter = 1;
-        appData.quarterTimes = [appData.startTime];
-        logEvent({ type: 'GAME_EVENT', descriptionMaster: "Peli alkoi" }); 
+        appData.startTime = new Date(); 
+        // Seuraava jakso -nappi hoitaa Q1:n aloituslogin
+        nextQuarterBtn.disabled = false; // Aktivoi "Aloita Q1" -nappi
+        nextQuarterBtn.click(); // Klikataan automaattisesti "Aloita Q1"
+        // Yllä oleva korvaa suoran Q1:n aloituksen tässä.
+        // appData.currentQuarter = 1;
+        // appData.quarterTimes = [appData.startTime];
+        // logEvent({ type: 'GAME_EVENT', descriptionMaster: "Peli alkoi" });
+        // logEvent({ type: 'QUARTER_START', descriptionMaster: "Jakso Q1 alkoi" });
+
         saveData(); renderAll();
+        startGameBtn.disabled = true; // Disabloidaan heti
+        endGameBtn.disabled = false;
+        togglePauseBtn.disabled = false;
     });
 
     nextQuarterBtn.addEventListener('click', () => {
-        if (!appData.gameStarted || appData.gameEnded || appData.isGamePaused) return;
-        if (appData.currentQuarter < 4) {
-            appData.currentQuarter++;
-            appData.quarterTimes.push(new Date());
-            logEvent({ type: 'GAME_EVENT', descriptionMaster: `Jakso ${appData.currentQuarter} alkoi` });
-            saveData(); renderAll();
-        } else {
-            alert("Peli on jo viimeisellä jaksolla. Lopeta peli.");
+        if (!appData.gameStarted || appData.gameEnded) return;
+
+        if (appData.currentQuarter === 0) { // Peliä ei ole vielä aloitettu kunnolla, aloitetaan Q1
+            appData.currentQuarter = 1;
+            appData.isGamePaused = false; // Varmistetaan, että peli ei ole paussilla
+            appData.quarterTimes[0] = new Date(); // Q1 aloitusaika
+            if(appData.gameHistory.length === 0 || appData.gameHistory[appData.gameHistory.length-1]?.type !== 'GAME_EVENT'){
+                 logEvent({ type: 'GAME_EVENT', descriptionMaster: "Peli alkoi" });
+            }
+            logEvent({ type: 'QUARTER_START', descriptionMaster: `Jakso Q${appData.currentQuarter} alkoi` });
+        } else if (appData.isGamePaused) { // Jakso on päättynyt (katkolla), aloitetaan seuraava
+            if (appData.currentQuarter < 4) {
+                appData.currentQuarter++;
+                appData.isGamePaused = false; // Peli jatkuu
+                appData.quarterTimes[appData.currentQuarter - 1] = new Date(); // Seuraavan jakson aloitusaika
+                logEvent({ type: 'QUARTER_START', descriptionMaster: `Jakso Q${appData.currentQuarter} alkoi` });
+            } else {
+                alert("Peli on jo viimeisellä jaksolla. Lopeta peli."); return;
+            }
+        } else { // Jakso on käynnissä, päätetään se
+            logEvent({ type: 'QUARTER_END', descriptionMaster: `Jakso Q${appData.currentQuarter} päättyi` });
+            appData.isGamePaused = true; // Siirrytään katkolle jakson jälkeen
+            appData.lastPauseStartTime = new Date(); // Aloitetaan "virallinen" katko tässä
         }
+        saveData(); renderAll();
     });
 
     endGameBtn.addEventListener('click', () => {
         if (!appData.gameStarted || appData.gameEnded) return;
-        if (appData.isGamePaused) { toggleGamePause(); }
+        
+        // Jos viimeinen jakso oli käynnissä, päätetään se ensin
+        if (!appData.isGamePaused && appData.currentQuarter > 0 && appData.currentQuarter <= 4) {
+            logEvent({ type: 'QUARTER_END', descriptionMaster: `Jakso Q${appData.currentQuarter} päättyi` });
+        }
+        // Varmistetaan, että peli ei ole enää paussilla, kun se lopetetaan
+        appData.isGamePaused = false; 
         appData.gameEnded = true; appData.endTime = new Date();
         logEvent({ type: 'GAME_EVENT', descriptionMaster: "Peli päättyi" });
         saveData(); renderAll();
@@ -361,6 +395,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     togglePauseBtn.addEventListener('click', () => {
         if (!appData.gameStarted || appData.gameEnded) return;
+        // Estetään manuaalinen katko, jos ollaan jaksojen välisellä automaattisella katkolla
+        if (appData.isGamePaused && appData.quarterTimes.length === appData.currentQuarter && appData.currentQuarter > 0 && appData.currentQuarter < 4) {
+            alert("Peli on jaksojen välisellä tauolla. Aloita seuraava jakso.");
+            return;
+        }
         toggleGamePause();
     });
 
@@ -379,107 +418,137 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function updateGameControls() {
-        const disableAll = !appData.gameStarted || appData.gameEnded;
+        const disableAllNonStart = !appData.gameStarted || appData.gameEnded;
         startGameBtn.disabled = appData.gameStarted && !appData.gameEnded;
-        nextQuarterBtn.disabled = disableAll || appData.currentQuarter === 4 || appData.isGamePaused;
-        endGameBtn.disabled = disableAll;
-        togglePauseBtn.disabled = disableAll;
+        // nextQuarterBtn:n tila hoidetaan updateQuarterDisplay-funktiossa
+        endGameBtn.disabled = disableAllNonStart;
+        togglePauseBtn.disabled = disableAllNonStart;
+
+        // Jos peli on päättynyt, disabloidaan myös nextQuarterBtn
+        if (appData.gameEnded) {
+            nextQuarterBtn.disabled = true;
+        }
     }
     
     function updatePauseButtonState() {
         togglePauseBtn.textContent = appData.isGamePaused ? "Jatka Peliä" : "Aloita Katko";
-        if (appData.isGamePaused) {
+        // Estetään napin käyttö, jos ollaan automaattisella jaksonvaihtokatkolla
+        const isOnAutomaticQuarterBreak = appData.isGamePaused && 
+                                        appData.quarterTimes.length === appData.currentQuarter && 
+                                        appData.currentQuarter > 0 && appData.currentQuarter < 4;
+        togglePauseBtn.disabled = !appData.gameStarted || appData.gameEnded || isOnAutomaticQuarterBreak;
+
+        if (appData.isGamePaused && !isOnAutomaticQuarterBreak) { // Korostetaan vain manuaalista katkoa
              togglePauseBtn.style.backgroundColor = "var(--accent-color-action)"; 
         } else {
             togglePauseBtn.style.backgroundColor = ""; 
         }
     }
 
-    function updateQuarterDisplay() {
-        const quarterText = appData.currentQuarter > 0 ? `Q${appData.currentQuarter}` : "Q1";
-        nextQuarterBtn.textContent = `Jakso (${quarterText})`; 
-        if (appData.currentQuarter === 4) {
-            nextQuarterBtn.textContent = `Jakso (Q4)`;
-        }
-         if (!appData.gameStarted || appData.currentQuarter === 0) {
-            nextQuarterBtn.textContent = "Jakso (Q1)";
+    function updateQuarterDisplay() { // Uusi logiikka jaksonvaihtonapille
+        if (!appData.gameStarted || appData.currentQuarter === 0) {
+            nextQuarterBtn.textContent = `Aloita Q1`;
+            nextQuarterBtn.disabled = !appData.gameStarted; // Aktiivinen vain jos peli aloitettu (startGameBtn klikattu)
+        } else if (appData.gameEnded) {
+            nextQuarterBtn.textContent = `Peli Päättynyt`;
+            nextQuarterBtn.disabled = true;
+        } else if (appData.isGamePaused) { // Jakso on päättynyt, odotetaan seuraavan alkua
+            if (appData.currentQuarter < 4) {
+                nextQuarterBtn.textContent = `Aloita Q${appData.currentQuarter + 1}`;
+                nextQuarterBtn.disabled = false;
+            } else { // Q4 on päättynyt
+                nextQuarterBtn.textContent = `Päätä Peli`; // Tai voisi olla disabloitu ja vain End Game toimii
+                nextQuarterBtn.disabled = true; // Tai ohjaa endGameBtn:n toimintoon
+            }
+        } else { // Jakso on käynnissä
+            nextQuarterBtn.textContent = `Päätä Q${appData.currentQuarter}`;
+            nextQuarterBtn.disabled = false;
         }
     }
 
     function updateCurrentGameNameDisplay() {
-        const nameToShow = appData.gameName && appData.gameName.trim() !== "" ? appData.gameName.trim() : "Pelin Seuranta";
-        currentGameNameDisplay.textContent = nameToShow;
+        const home = appData.homeTeamName || "Koti";
+        const away = appData.awayTeamName || "Vieras";
+        currentGameNameDisplay.textContent = `${home} - ${away}`;
     }
-    gameNameInput.addEventListener('input', saveData); 
+
+    function updateScoreDisplay() { // UUSI
+        const homeScore = appData.players.reduce((sum, player) => sum + player.points, 0);
+        homeScoreDisplay.textContent = homeScore;
+        opponentScoreDisplay.textContent = appData.opponentScore;
+    }
+
+    function updateFoulDisplay() { // UUSI
+        const homeFouls = appData.players.reduce((sum, player) => sum + player.fouls, 0);
+        homeFoulsDisplay.textContent = homeFouls;
+    }
+
+    homeTeamNameInput.addEventListener('input', saveData); 
+    awayTeamNameInput.addEventListener('input', saveData); 
     maxPlayersOnCourtSetting.addEventListener('change', saveData); 
 
     // --- HISTORIA ---
     function logEvent(eventData) { 
         const timestamp = new Date();
         const timeString = timestamp.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        
         let finalDescription = eventData.descriptionMaster || ""; 
-
         if (!finalDescription) { 
             let playerPrefix = "";
             if (eventData.playerId) {
-                const player = appData.players.find(p => p.id === eventData.playerId);
+                const player = appData.players.find(p => p.id === eventData.playerId) || 
+                               appData.gameHistory.find(ev => ev.playerId === eventData.playerId && ev.playerName); // Yritä löytää nimi aiemmasta historiasta, jos pelaaja poistettu
                 if (player) {
-                    playerPrefix = `#${player.number} ${player.name} | `;
+                    playerPrefix = `#${eventData.playerNumber || player.playerNumber || player.number} ${eventData.playerName || player.playerName || player.name} | `;
+                } else if (eventData.playerNumber && eventData.playerName) {
+                    playerPrefix = `#${eventData.playerNumber} ${eventData.playerName} | `;
                 }
             }
             finalDescription = `${timeString} ${getCurrentQuarterForLog()} – ${playerPrefix}${eventData.descriptionDetails || eventData.type || 'Tuntematon tapahtuma'}`;
         } else { 
-            if (!finalDescription.includes(timeString) && (appData.gameStarted || eventData.type === 'GAME_EVENT' || eventData.type === 'PAUSE' || eventData.type === 'RESUME')) {
-                 finalDescription = `${timeString} ${getCurrentQuarterForLog()} – ${finalDescription}`;
-            } else if (!finalDescription.includes(timeString) && eventData.type !== 'GAME_EVENT' && eventData.type !== 'PAUSE' && eventData.type !== 'RESUME'){
+            if (!finalDescription.includes(timeString) && (appData.gameStarted || ['GAME_EVENT', 'PAUSE', 'RESUME', 'QUARTER_START', 'QUARTER_END'].includes(eventData.type))) {
                  finalDescription = `${timeString} ${getCurrentQuarterForLog()} – ${finalDescription}`;
             }
         }
-        
         const fullEventData = {
-            id: generateEventId(),
-            timestamp: timestamp,
-            quarter: getCurrentQuarterForLog(), 
-            description: finalDescription, 
-            ...eventData 
+            id: generateEventId(), timestamp: timestamp, quarter: getCurrentQuarterForLog(), 
+            description: finalDescription, ...eventData 
         };
-        delete fullEventData.descriptionDetails; 
-        delete fullEventData.descriptionMaster; 
-
+        delete fullEventData.descriptionDetails; delete fullEventData.descriptionMaster; 
         appData.gameHistory.push(fullEventData);
-        renderHistory(); 
-        // saveData(); // Poistettu tästä, koska logEvent kutsutaan usein paikoista, joissa saveData kutsutaan heti perään.
-                   // Tämä voi aiheuttaa tuplatallennuksia. Parempi kutsua saveDatat pääfunktioissa.
-                   // JOS huomataan, että jokin loggaus ei tallennu, tämä voidaan palauttaa.
+        // renderHistory(); // Ei kutsuta tässä, vaan pääfunktiossa, joka kutsuu logEventiä
+        // saveData(); // Ei kutsuta tässä
     }
 
     function renderHistory() {
         gameHistoryLog.innerHTML = '';
-        if (appData.gameName && appData.gameName.trim() !== "") {
+        const gameTitle = (appData.homeTeamName || "Koti") + " - " + (appData.awayTeamName || "Vieras");
+        if (gameTitle !== "Koti - Vieras") {
             const gameNameHeader = document.createElement('div'); 
             gameNameHeader.className = 'history-log-entry'; 
-            gameNameHeader.innerHTML = `<p style="font-weight: bold; border-bottom: 1px solid var(--primary-color); width: 100%; text-align: center;">Peli: ${appData.gameName.trim()}</p>`;
+            gameNameHeader.innerHTML = `<p style="font-weight: bold; border-bottom: 1px solid var(--primary-color); width: 100%; text-align: center;">Peli: ${gameTitle}</p>`;
             gameHistoryLog.appendChild(gameNameHeader);
         }
 
-        if (appData.gameHistory.length === 0 && !(appData.gameName && appData.gameName.trim() !== "")) {
-            gameHistoryLog.innerHTML = '<p>Ei tapahtumia vielä.</p>';
-            return;
+        if (appData.gameHistory.length === 0 && !(appData.homeTeamName && appData.awayTeamName)) {
+            gameHistoryLog.innerHTML = '<p>Ei tapahtumia vielä.</p>'; return;
         }
-
         [...appData.gameHistory].reverse().forEach(event => { 
             const entryDiv = document.createElement('div');
             entryDiv.className = 'history-log-entry';
             const p = document.createElement('p');
             p.textContent = event.description;
             entryDiv.appendChild(p);
-
-            const nonRemovableTypes = ['GAME_EVENT', 'PAUSE', 'RESUME'];
+            const nonRemovableTypes = ['GAME_EVENT', 'PAUSE', 'RESUME', 'QUARTER_START', 'QUARTER_END', 'OPPONENT_SCORE'];
             if (!nonRemovableTypes.includes(event.type) && event.type) { 
                 const removeBtn = document.createElement('button');
-                removeBtn.className = 'remove-history-event-btn';
-                removeBtn.textContent = '-';
+                removeBtn.className = 'remove-history-event-btn'; removeBtn.textContent = '-';
+                removeBtn.dataset.eventId = event.id;
+                removeBtn.addEventListener('click', () => removeHistoryEvent(event.id));
+                entryDiv.appendChild(removeBtn);
+            } else if (event.type === 'OPPONENT_SCORE') { // Erillinen poisto vastustajan pisteille
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-history-event-btn opponent-event'; // Oma luokka, jos tarvitaan eri tyyliä
+                removeBtn.textContent = '-V'; // Erottuva teksti
                 removeBtn.dataset.eventId = event.id;
                 removeBtn.addEventListener('click', () => removeHistoryEvent(event.id));
                 entryDiv.appendChild(removeBtn);
@@ -490,29 +559,26 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function removeHistoryEvent(eventId) {
         if (!confirm("Haluatko varmasti poistaa tämän tapahtuman? Tätä ei voi kumota.")) return;
-
         const eventIndex = appData.gameHistory.findIndex(event => event.id === eventId);
         if (eventIndex === -1) { console.error("Poistettavaa tapahtumaa ei löytynyt:", eventId); return; }
-
         const eventToRemove = appData.gameHistory[eventIndex];
         const player = eventToRemove.playerId ? appData.players.find(p => p.id === eventToRemove.playerId) : null;
 
-        if (player) {
+        if (player) { // OMAN PELAAJAN TAPAHTUMAT
             switch (eventToRemove.type) {
-                case 'SCORE':
-                    if (typeof eventToRemove.value === 'number') { player.points = Math.max(0, player.points - eventToRemove.value); }
-                    break;
+                case 'SCORE': if (typeof eventToRemove.value === 'number') { player.points = Math.max(0, player.points - eventToRemove.value); } break;
                 case 'FOUL':
                     player.fouls = Math.max(0, player.fouls - 1);
                     if (player.fouledOut && player.fouls < 5) {
                         player.fouledOut = false;
-                        logEvent({ type: 'GAME_EVENT', playerId: player.id, playerName: player.name, playerNumber: player.number,
-                                   descriptionMaster: `#${player.number} ${player.name} | Ei enää 'fouled out' (virheen poisto)` });
-                    }
-                    break;
+                        logEvent({ type: 'GAME_EVENT', playerId: player.id, descriptionMaster: `#${player.number || eventToRemove.playerNumber} ${player.name || eventToRemove.playerName} | Ei enää 'fouled out' (virheen poisto)` });
+                    } break;
                 case 'ASSIST': player.assists = Math.max(0, player.assists - 1); break;
                 case 'REBOUND': player.rebounds = Math.max(0, player.rebounds - 1); break;
-                case 'SUBSTITUTION': break;
+            }
+        } else if (eventToRemove.type === 'OPPONENT_SCORE') { // VASTUSTAJAN PISTEET
+            if (typeof eventToRemove.value === 'number') {
+                appData.opponentScore = Math.max(0, appData.opponentScore - eventToRemove.value);
             }
         }
         appData.gameHistory.splice(eventIndex, 1);
@@ -520,29 +586,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     copyHistoryBtn.addEventListener('click', () => {
-        let historyText = "";
-        if (appData.gameName && appData.gameName.trim() !== "") {
-            historyText += `Peli: ${appData.gameName.trim()}\nMaksimipelaajia kentällä: ${appData.maxPlayersOnCourt}\n--------------------\n`;
-        }
+        let historyText = `${appData.homeTeamName || "Koti"} - ${appData.awayTeamName || "Vieras"}\n`;
+        historyText += `Pelaajia kentällä: ${appData.maxPlayersOnCourt} vs ${appData.maxPlayersOnCourt}\n`;
+        const homeScore = appData.players.reduce((sum, p) => sum + p.points, 0);
+        historyText += `Lopputulos: ${homeScore} - ${appData.opponentScore}\n--------------------\n`;
         appData.gameHistory.forEach(event => { historyText += event.description + '\n'; }); 
-
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(historyText.trim())
-                .then(() => alert('Historia kopioitu leikepöydälle!'))
-                .catch(err => alert('Kopiointi epäonnistui: ' + err));
-        } else { 
-            const textArea = document.createElement("textarea");
-            textArea.value = historyText.trim();
-            document.body.appendChild(textArea);
-            textArea.focus(); textArea.select();
-            try { document.execCommand('copy'); alert('Historia kopioitu leikepöydälle!'); }
-            catch (err) { alert('Kopiointi epäonnistui: ' + err); }
-            document.body.removeChild(textArea);
-        }
+        if (navigator.clipboard) { /* ... */ } else { /* Fallback */ }
     });
 
     clearGameHistoryBtn.addEventListener('click', () => {
-        if (confirm("Haluatko varmasti tyhjentää tämän pelin historian ja nollata pelaajien tilastot? Pelaajia, pelin nimeä ja asetuksia ei poisteta.")) {
+        if (confirm("Haluatko varmasti tyhjentää tämän pelin historian ja nollata pelaajien tilastot? Pelaajia, joukkueiden nimiä ja asetuksia ei poisteta.")) {
             resetGameStatsAndState(true); 
             logEvent({ type: 'GAME_EVENT', descriptionMaster: "Pelihistoria tyhjennetty ja tilastot nollattu" });
             saveData(); renderAll();
@@ -550,48 +603,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- OHJEIDEN POPUP-IKKUNAN HALLINTA ---
     if (openInstructionsLink && instructionsModal && closeInstructionsBtn) { 
-        openInstructionsLink.addEventListener('click', (e) => {
-            e.preventDefault(); 
-            instructionsModal.classList.remove('hidden');
-        });
+        openInstructionsLink.addEventListener('click', (e) => { e.preventDefault(); instructionsModal.classList.remove('hidden'); });
+        closeInstructionsBtn.addEventListener('click', () => { instructionsModal.classList.add('hidden'); });
+        instructionsModal.addEventListener('click', (e) => { if (e.target === instructionsModal) { instructionsModal.classList.add('hidden'); } });
+    } else { console.warn("Ohjeiden popup-elementtejä ei löytynyt."); }
 
-        closeInstructionsBtn.addEventListener('click', () => {
-            instructionsModal.classList.add('hidden');
-        });
-
-        instructionsModal.addEventListener('click', (e) => {
-            if (e.target === instructionsModal) { 
-                instructionsModal.classList.add('hidden');
-            }
-        });
-    } else {
-        console.warn("Ohjeiden popup-elementtejä ei löytynyt HTML:stä.");
-    }
-
-    // --- NÄKYMIEN VAIHTO ---
     function showView(viewId) {
-        [setupView, gameView, historyView].forEach(view => {
+        [setupView, gameView, historyView, reportView].forEach(view => { // Lisätty reportView
             view.classList.toggle('hidden', view.id !== viewId);
         });
-        // Päivitetään relevantit osat vain, kun näkymä aktivoituu
-        if (viewId === 'gameView') { renderGamePlayerList(); updateCurrentGameNameDisplay(); updatePauseButtonState(); updateGameControls(); updateQuarterDisplay(); }
+        if (viewId === 'gameView') { renderGamePlayerList(); updateHeaderDisplays(); updatePauseButtonState(); updateGameControls(); }
         if (viewId === 'historyView') { renderHistory(); }
-        if (viewId === 'setupView') { renderPlayers(); } // Päivitä pelaajalista setup-näkymässäkin
+        if (viewId === 'setupView') { renderPlayers(); }
+        if (viewId === 'reportView') { /* renderReportView(); */ reportGameNameDisplay.textContent = `${appData.homeTeamName} - ${appData.awayTeamName}`; } // Kutsutaan renderReportView myöhemmin
     }
 
     navigateToGameBtn.addEventListener('click', () => {
-        if (appData.players.length === 0) {
-            alert("Lisää vähintään yksi pelaaja."); return;
+        if (appData.players.length === 0 && appData.homeTeamName.toLowerCase() === "kobrat") { // Vain jos oletusnimi, muuten voidaan mennä ilman pelaajia jos seurataan vain vastustajaa tms.
+            alert("Lisää vähintään yksi pelaaja kotijoukkueelle."); return;
+        }
+        if (!appData.homeTeamName || !appData.awayTeamName) {
+            alert("Määritä joukkueiden nimet asetuksissa."); return;
         }
         showView('gameView');
     });
     navigateToSetupBtn.addEventListener('click', () => showView('setupView'));
     navigateToHistoryBtn.addEventListener('click', () => showView('historyView'));
-    backToGameFromHistoryBtn.addEventListener('click', () => showView('gameView'));
+    navigateToReportBtn.addEventListener('click', () => showView('reportView')); // UUSI
+    backToGameFromHistoryBtnReport.addEventListener('click', () => showView('gameView'));
+    backToGameFromReportBtn.addEventListener('click', () => showView('gameView')); // UUSI
 
-    // --- ALUSTUS ---
     loadData();
     showView('setupView');
 });

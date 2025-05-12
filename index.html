@@ -2,10 +2,8 @@
 <html lang="fi">
 <head>
     <meta charset="UTF-8">
-    <!-- Voit lisätä tämän, jos haluat kokeilla zoomauksen estoa: -->
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"> --> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pelaajaseuranta – Basket Tracker v1.1</title>
+    <title>Pelaajaseuranta – Basket Tracker v1.2</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +19,7 @@
         		<h1>Pelaajaseuranta – Basket Tracker</h1>
         		<p class="header-info-text">
             	Juniorikoripallon pelitapahtumien ja pelaajasuoritusten reaaliaikainen seuranta.<br>
-            	<span class="developer-credit">Kehittäjä: Vesa Perasto | versio 1.1 | <a href="#" id="openInstructionsLink">Ohjeet</a></span>
+            	<span class="developer-credit">Kehittäjä: Vesa Perasto | <a href="#" id="openInstructionsLink">Ohjeet</a></span>
         		</p>
     		</div>
 		</header>
@@ -31,8 +29,12 @@
             <h2>Pelin Asetukset ja Pelaajat</h2>
             <div class="game-setup-options">
                 <div class="form-group">
-                    <label for="gameName">Pelin nimi:</label>
-                    <input type="text" id="gameName" placeholder="esim. Kobrat - Honsu">
+                    <label for="homeTeamNameInput">Kotijoukkue:</label>
+                    <input type="text" id="homeTeamNameInput" placeholder="Kotijoukkueen nimi">
+                </div>
+                <div class="form-group">
+                    <label for="awayTeamNameInput">Vierasjoukkue:</label>
+                    <input type="text" id="awayTeamNameInput" placeholder="Vastustajan nimi">
                 </div>
                 <div class="form-group">
                     <label for="maxPlayersOnCourtSetting">Pelaajia kentällä:</label>
@@ -48,6 +50,7 @@
                 <input type="text" id="playerNumber" placeholder="Pelinumero">
                 <button id="addPlayerBtn">Lisää Pelaaja</button>
             </div>
+            <h3>Lisätyt Pelaajat (Kotijoukkue)</h3>
             <div id="playerList">
                 <!-- Pelaajakortit tulevat tänne -->
             </div>
@@ -58,8 +61,19 @@
         <section id="gameView" class="hidden">
             <div class="game-view-header">
                 <h2 id="currentGameNameDisplay">Pelin Seuranta</h2>
+                <div class="score-and-fouls-display">
+                    <span>Pisteet: <span id="homeScoreDisplay">0</span> - <span id="opponentScoreDisplay">0</span></span>
+                    <span>Kotijoukkueen virheet: <span id="homeFoulsDisplay">0</span></span>
+                </div>
             </div>
             
+            <div class="opponent-score-controls">
+                <h4>Vastustajan Pisteet:</h4>
+                <button class="opponent-score-btn" data-points="1">+1P</button>
+                <button class="opponent-score-btn" data-points="2">+2P</button>
+                <button class="opponent-score-btn" data-points="3">+3P</button>
+            </div>
+
             <div id="gamePlayerList">
                 <!-- Pelaajien peliaikaiset kontrollit tulevat tänne -->
             </div>
@@ -67,12 +81,24 @@
             <div class="sticky-game-controls">
                 <button id="startGameBtn">Aloita Peli</button>
                 <button id="togglePauseBtn" disabled>Aloita Katko</button>
-                <button id="nextQuarterBtn" disabled>Jakso (Q1)</button>
+                <button id="nextQuarterBtn" disabled>Aloita Q1</button> <!-- Teksti muuttuu dynaamisesti -->
                 <button id="endGameBtn" disabled>Lopeta Peli</button>
+                <button id="navigateToReportBtn" class="nav-button secondary-nav">Raportti</button> <!-- UUSI Raportti-nappi -->
                 <button id="navigateToHistoryBtn" class="nav-button secondary-nav">Historia</button>
                 <button id="navigateToSetupBtn" class="nav-button secondary-nav">Asetukset</button>
             </div>
         </section>
+        
+        <!-- UUSI: Vaihe 4: Raportti-näkymä (perusrakenne) -->
+        <section id="reportView" class="hidden">
+            <h2>Ottelun Raportti <span id="reportGameNameDisplay"></span></h2>
+            <div id="reportContent">
+                <p>Raportin sisältö ja peliaikataulukko tulee tähän myöhemmin...</p>
+                <!-- Tähän tulee taulukko pelaajien statseista ja peliajoista -->
+            </div>
+            <button id="backToGameFromReportBtn" class="nav-button primary-nav">Palaa Pelin Seurantaan</button>
+        </section>
+
 
         <!-- Vaihe 3: Historia -->
         <section id="historyView" class="hidden">
@@ -84,7 +110,7 @@
             <div id="gameHistoryLog" class="history-log">
                 <!-- Tapahtumalogit tulevat tänne -->
             </div>
-            <button id="backToGameFromHistoryBtn" class="nav-button primary-nav">Palaa Pelin Seurantaan</button>
+            <button id="backToGameFromHistoryBtnReport" class="nav-button primary-nav">Palaa Pelin Seurantaan</button> <!-- Nimi muutettu sekaannuksen välttämiseksi -->
         </section>
     </div>
 
@@ -92,39 +118,33 @@
     <div id="instructionsModal" class="modal hidden">
         <div class="modal-content">
             <span class="close-modal-btn" id="closeInstructionsBtn">×</span>
-            <h2>Käyttöohjeet – Pelaajaseuranta</h2>
+            <h2>Käyttöohjeet – Pelaajaseuranta v1.2</h2>
             <p>Tervetuloa käyttämään Pelaajaseurantaa!</p>
             
             <h3>1. Pelin Asetukset (Asetukset-näkymä)</h3>
             <ul>
-                <li><strong>Pelin Nimi:</strong> Anna pelille kuvaava nimi.</li>
-                <li><strong>Pelaajia kentällä:</strong> Valitse, pelataanko 3v3, 4v4 vai 5v5. Tämä rajoittaa kentälle laitettavien pelaajien määrää.</li>
-                <li><strong>Pelaajien Lisäys:</strong> Syötä kunkin pelaajan nimi ja pelinumero ja paina "Lisää Pelaaja". Pelaajia voi poistaa listalta.</li>
-                <li>Kun asetukset ovat valmiit, siirry pelin seurantaan "Siirry Pelin Seurantaan" -napista.</li>
+                <li><strong>Kotijoukkue / Vierasjoukkue:</strong> Anna joukkueiden nimet. Kotijoukkueen oletus on "Kobrat".</li>
+                <li><strong>Pelaajia kentällä:</strong> Valitse, pelataanko 3v3, 4v4 vai 5v5.</li>
+                <li><strong>Pelaajien Lisäys:</strong> Syötä kotijoukkueen pelaajien nimi ja pelinumero.</li>
+                <li>Kun asetukset ovat valmiit, siirry pelin seurantaan.</li>
             </ul>
 
             <h3>2. Pelin Seuranta</h3>
             <ul>
-                <li><strong>Pelin Aloitus:</strong> Paina "Aloita Peli". Aikaleima tallentuu.</li>
-                <li><strong>Pelikatko:</strong> "Aloita Katko" -napilla voit keskeyttää peliajan laskennan. "Jatka Peliä" jatkaa.</li>
-                <li><strong>Jakson Vaihto:</strong> "Jakso (QX)" -napilla siirryt seuraavalle jaksolle (1-4).</li>
-                <li><strong>Pelaajakortit:</strong>
-                    <ul>
-                        <li><strong>Kentälle/Penkille:</strong> Vaihda pelaajan tilaa. Vain kentällä oleville voi kirjata muita tapahtumia.</li>
-                        <li><strong>Toimintonapit (+1P, +2P, +3P, Virhe, Syöttö, Levypallo):</strong> Näkyvät vain kentällä olevalle pelaajalle.</li>
-                        <li><strong>5 Virhettä:</strong> Pelaaja poistuu automaattisesti pelistä saatuaan 5. virheen.</li>
-                    </ul>
-                </li>
+                <li><strong>Pelin Aloitus:</strong> Paina "Aloita Peli".</li>
+                <li><strong>Vastustajan Pisteet:</strong> Kirjaa vastustajan pisteet omista napeistaan.</li>
+                <li><strong>Pelikatko:</strong> "Aloita Katko" / "Jatka Peliä" -napilla. Pisteitä ja vaihtoja voi tehdä katkon aikana.</li>
+                <li><strong>Jakson Vaihto:</strong> "Aloita Jakso QX" / "Päätä Jakso QX". Jakson päättäminen siirtää pelin automaattisesti katkolle.</li>
+                <li><strong>Pelaajakortit:</strong> Toimintonapit näkyvät vain kentällä olevalle pelaajalle. 5 virhettä poistaa pelaajan pelistä.</li>
                 <li><strong>Pelin Lopetus:</strong> Paina "Lopeta Peli".</li>
-                <li><strong>Navigaatio:</strong> Alapalkista pääset takaisin asetuksiin tai historia-näkymään.</li>
+                <li><strong>Navigaatio:</strong> Alapalkista pääset asetuksiin, raporttiin tai historiaan.</li>
             </ul>
 
-            <h3>3. Historia</h3>
+            <h3>3. Historia & Raportti</h3>
             <ul>
-                <li>Näyttää kaikki pelitapahtumat aikajärjestyksessä (uusin ensin).</li>
-                <li><strong>Tapahtuman Poisto:</strong> Voit poistaa virheellisen merkinnän "-" -napista rivin perässä.</li>
-                <li><strong>Kopioi Historia:</strong> Kopioi koko historian leikepöydälle.</li>
-                <li><strong>Tyhjennä Pelihistoria:</strong> Nollaa nykyisen pelin tapahtumat ja pelaajien tilastot, mutta säilyttää pelaajat ja peliasetukset seuraavaa peliä varten.</li>
+                <li><strong>Historia:</strong> Näyttää kaikki pelitapahtumat. Voit poistaa virheellisen merkinnän.</li>
+                <li><strong>Raportti (Tulossa):</strong> Tähän tulee myöhemmin yhteenveto pelistä ja pelaajien peliajoista.</li>
+                <li><strong>Kopioi Historia / Tyhjennä Pelihistoria:</strong> Toimivat kuten ennen.</li>
             </ul>
             <p>Kaikki tiedot tallentuvat automaattisesti selaimeesi.</p>
         </div>
