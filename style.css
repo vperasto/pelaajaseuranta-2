@@ -398,6 +398,7 @@ button:disabled {
     background-color: var(--surface-color); /* Taustaväri yksittäisille tiedoille */
     padding: 8px;
     border-radius: 4px;
+    display: ruby;
 }
 .report-summary p strong { /* Selite */
     font-weight: normal; /* Ei boldausta, jos span on bold */
