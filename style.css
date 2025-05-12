@@ -618,3 +618,64 @@ button:disabled {
 /* } */
 
 /* --- RAPORTTINÄKYMÄN TAULUKON TYYLIT PÄÄTTYVÄT --- */
+
+/* LISÄÄ TÄMÄ @media (max-width: 768px) LOHKOON */
+
+#reportTableContainer {
+    margin-top: 15px; /* Pienennetään hieman ylämarginaalia */
+}
+
+#reportTableContainer table {
+    font-size: 0.8rem; /* Pienennetään perusfonttikokoa hieman */
+}
+
+#reportTableContainer th,
+#reportTableContainer td {
+    padding: 6px 8px; /* Pienennetään solujen paddingia */
+    /* Voit harkita white-space: normal; tässä, jos nowrap aiheuttaa ongelmia jo tällä leveydellä */
+}
+
+/* (Jos käytät seepraraitoja, niitä ei tarvitse yleensä muuttaa tässä) */
+
+
+/* LISÄÄ TÄMÄ @media (max-width: 480px) LOHKOON */
+
+#reportTableContainer {
+    margin-top: 10px; /* Vielä pienempi ylämarginaali */
+    /* Voit poistaa box-shadowin tässä koossa, jos haluat: */
+    /* box-shadow: none; */
+}
+
+#reportTableContainer table {
+    font-size: 0.75rem; /* Pienennetään fonttikokoa lisää */
+}
+
+#reportTableContainer th,
+#reportTableContainer td {
+    padding: 4px 5px; /* Pienennetään paddingia entisestään */
+    white-space: normal; /* TÄRKEÄ: Sallitaan tekstin rivitys kaikissa soluissa */
+                         /* Tämä auttaa estämään taulukon levenemistä liikaa */
+    vertical-align: top; /* Voi auttaa luettavuudessa, kun teksti rivittyy */
+}
+
+/* Varmistetaan, että numeroille jää oikea tasaus */
+#reportTableContainer td.numeric-stat {
+    text-align: right;
+    vertical-align: top; /* Tärkeä myös tässä, jos sisältö rivittyy */
+    /* Estetään monospacen aiheuttama liiallinen leveneminen tarvittaessa */
+    /* word-break: break-all; */ /* Voi olla liian aggressiivinen, käytä harkiten */
+}
+
+#reportTableContainer td.player-name-report {
+     text-align: left; /* Varmistetaan nimi vasemmalle */
+     vertical-align: top;
+}
+
+/* Piilotetaan vähemmän kriittisiä sarakkeita pienimmällä näytöllä (ESIMERKKI) */
+/* Voit poistaa kommentit, jos haluat piilottaa esim. Peluutus % -sarakkeen */
+/*
+#reportTableContainer th:nth-child(8),
+#reportTableContainer td:nth-child(8) {
+     display: none;
+}
+*/
