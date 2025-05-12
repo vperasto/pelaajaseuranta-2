@@ -69,7 +69,8 @@
             <div class="game-status-controls-wrapper">
                 <div class="score-and-fouls-display">
                     <span>Pisteet: <span id="homeScoreDisplay">0</span> - <span id="opponentScoreDisplay">0</span></span>
-                    <span>Kotijoukkueen virheet: <span id="homeFoulsDisplay">0</span></span>
+                    <!-- MUUTETTU TEKSTI ALLA -->
+                    <span>Virheet tässä jaksossa: <span id="homeFoulsDisplay">0</span></span>
                 </div>
                 <div class="opponent-score-controls">
                     <h4>Vastustajan Pisteet:</h4>
@@ -103,7 +104,7 @@
                 <p><strong>Pelin tila:</strong> <span id="reportGameStatus">Ei aloitettu</span></p>
                 <p><strong>Kokonaispeliaika:</strong> <span id="reportTotalGameTime">00:00</span></p>
                 <p><strong>Pisteet:</strong> <span id="reportHomeScore">0</span> - <span id="reportOpponentScore">0</span></p>
-                <p><strong>Kotijoukkueen virheet:</strong> <span id="reportHomeFouls">0</span></p>
+                <p><strong>Kotijoukkueen virheet (yht.):</strong> <span id="reportHomeFouls">0</span></p> <!-- Selkeytetty teksti raportissa -->
             </div>
 
             <div id="reportTableContainer">
@@ -131,7 +132,7 @@
 
     <!-- Ohjeiden Popup-ikkuna -->
     <div id="instructionsModal" class="modal hidden">
-        <div class="modal-content">
+         <div class="modal-content">
             <span class="close-modal-btn" id="closeInstructionsBtn">×</span>
             <h2>Käyttöohjeet – Pelaajaseuranta v1.2</h2>
             <p>Tervetuloa käyttämään Pelaajaseurantaa! Tämä sovellus auttaa sinua seuraamaan juniorikoripallon pelitapahtumia ja pelaajien suorituksia reaaliajassa.</p>
@@ -146,31 +147,31 @@
 
             <h3>2. Pelin Seuranta (Pelinäkymä)</h3>
             <ul>
-                <li><strong>Yläosan Näyttö:</strong> Pelinäkymän yläosassa näet joukkueiden nimet, isokokoisena kotijoukkueen ja vastustajan pisteet sekä kotijoukkueen joukkuevirheet.</li>
+                <li><strong>Yläosan Näyttö:</strong> Pelinäkymän yläosassa näet joukkueiden nimet, isokokoisena kotijoukkueen ja vastustajan pisteet sekä kotijoukkueen virheet *tässä jaksossa*.</li>
                 <li><strong>Vastustajan Pisteet:</strong> Tulosnäytön vieressä olevilla +1P, +2P, +3P -napeilla voit kirjata vastustajalle pisteitä.</li>
                 <li><strong>Pelin Aloitus:</strong> Paina alareunan "Aloita Peli" -nappia. Tämä käynnistää pelin yleisen ajastuksen (mutta ei vielä jaksoa).</li>
                 <li><strong>Jakson Aloitus/Lopetus:</strong>
                     <ul>
-                       <li>Paina "Aloita Q1" aloittaaksesi ensimmäisen jakson ja pelaajien peliaikakellot.</li>
+                       <li>Paina "Aloita Q1" aloittaaksesi ensimmäisen jakson ja pelaajien peliaikakellot. Tämä myös nollaa jakson virhelaskurin.</li>
                        <li>Jakson ollessa käynnissä nappi muuttuu muotoon "Päätä QX". Paina sitä jakson lopussa. Tämä pysäyttää pelaajien kellot jakson loppuun.</li>
-                       <li>Seuraavan jakson voit aloittaa painamalla "Aloita QX+1".</li>
+                       <li>Seuraavan jakson voit aloittaa painamalla "Aloita QX+1". Tämä nollaa taas jakson virhelaskurin.</li>
                        <li>Jaksojen välissä (kun edellinen on päätetty, mutta seuraavaa ei aloitettu) pelaajien kellot ovat pysähdyksissä.</li>
                     </ul>
                 </li>
                 <li><strong>Pelikatko (Manuaalinen Tauko):</strong>
                     <ul>
                         <li>Jakson *ollessa käynnissä*, voit painaa "Aloita Katko". Tämä pysäyttää pelaajien peliaikakellot väliaikaisesti (esim. aikalisän tai loukkaantumisen ajaksi).</li>
-                        <li>Katkon aikana voit edelleen kirjata pisteitä ja virheitä sekä tehdä vaihtoja.</li>
+                        <li>Katkon aikana voit edelleen kirjata pisteitä ja virheitä sekä tehdä vaihtoja. Jakson virhelaskuri EI nollaannu katkolla.</li>
                         <li>Paina "Jatka Peliä" lopettaaksesi katkon ja käynnistääksesi kellot uudelleen.</li>
                         <li>HUOM: Jakson päättäminen ei ole sama asia kuin katko. Käytä katkoa vain jakson sisäisiin pysäytyksiin.</li>
                     </ul>
                 </li>
                 <li><strong>Pelaajakortit:</strong>
                     <ul>
-                        <li>Jokaisella pelaajalla on oma korttinsa, joka näyttää nimen, numeron, pisteet (P), virheet (V), syötöt (S) ja levypallot (L).</li>
+                        <li>Jokaisella pelaajalla on oma korttinsa, joka näyttää nimen, numeron, pisteet (P), kokonaisvirheet (V), syötöt (S) ja levypallot (L).</li>
                         <li>"Kentälle" / "Penkille" -napilla vaihdat pelaajan statusta. Vain kentällä oleville pelaajille kertyy peliaikaa jakson ollessa käynnissä (ja ilman katkoa). Et voi laittaa kentälle enempää pelaajia kuin asetuksissa on määritelty.</li>
                         <li>Kentällä oleville pelaajille näkyvät toimintonapit: +1P, +2P, +3P, Virhe, Syöttö, Levypallo. Syöttö ja Levypallo eivät ole käytössä manuaalisen katkon aikana.</li>
-                        <li>Kun pelaaja saa 5 virhettä, hän poistuu pelistä ("fouled out"), hänen korttinsa muuttuu himmeämmäksi, eikä häntä voi enää laittaa kentälle tai antaa hänelle tilastomerkintöjä.</li>
+                        <li>Kun pelaaja saa 5 virhettä (kokonaisvirhettä), hän poistuu pelistä ("fouled out"), hänen korttinsa muuttuu himmeämmäksi, eikä häntä voi enää laittaa kentälle tai antaa hänelle tilastomerkintöjä.</li>
                     </ul>
                 </li>
                  <li><strong>Pelin Lopetus:</strong> Kun ottelu on päättynyt, paina "Lopeta Peli". Tämä pysäyttää kaikki kellot lopullisesti.</li>
@@ -182,15 +183,15 @@
                 <li><strong>Historia:</strong>
                     <ul>
                         <li>Näyttää aikajärjestyksessä (uusin ylinnä) kaikki pelin aikana kirjatut tapahtumat (pisteet, virheet, vaihdot, jaksomuutokset jne.) kellonaikoineen ja jakson tilan mukaan.</li>
-                        <li>Voit poistaa virheellisen tilastomerkinnän (pisteet, virheet, syötöt, levypallot, vastustajan pisteet) painamalla rivin lopussa olevaa "Peru"-nappia. Tämä kumoaa merkinnän vaikutuksen tilastoihin (esim. vähentää pisteitä tai virheitä). HUOM: Tämä EI korjaa pelaajien peliaikoja taannehtivasti. Pelin tilan muutoksia (kuten vaihtoja tai jakson aloituksia) ei voi poistaa.</li>
+                        <li>Voit poistaa virheellisen tilastomerkinnän (pisteet, virheet, syötöt, levypallot, vastustajan pisteet) painamalla rivin lopussa olevaa "Peru"-nappia. Tämä kumoaa merkinnän vaikutuksen tilastoihin (esim. vähentää pisteitä tai pelaajan kokonaisvirheitä JA kyseisen jakson virheitä). HUOM: Tämä EI korjaa pelaajien peliaikoja taannehtivasti. Pelin tilan muutoksia (kuten vaihtoja tai jakson aloituksia) ei voi poistaa.</li>
                         <li>"Kopioi Historia" kopioi koko tapahtumalokin tekstimuodossa leikepöydällesi, josta voit liittää sen muualle.</li>
                         <li>"Tyhjennä Pelihistoria" nollaa kaikki tämän pelin tilastot, tapahtumat ja peliajat, mutta säilyttää pelaajalistasi ja joukkueiden nimet seuraavaa peliä varten. Käytä varoen!</li>
                     </ul>
                 </li>
                 <li><strong>Raportti:</strong>
                     <ul>
-                        <li>Näyttää yhteenvedon pelin perustiedoista (tila, kesto, pisteet, virheet).</li>
-                        <li>Listaa pelaajakohtaiset tilastot (pisteet, virheet, syötöt, levypallot).</li>
+                        <li>Näyttää yhteenvedon pelin perustiedoista (tila, kesto, pisteet, kotijoukkueen kokonaisvirheet).</li>
+                        <li>Listaa pelaajakohtaiset tilastot (pisteet, kokonaisvirheet, syötöt, levypallot).</li>
                         <li>Näyttää jokaisen pelaajan kertyneen peliajan (muodossa MM:SS) ja peluutusprosentin suhteessa pelin aktiiviseen kokonaiskestoon.</li>
                         <li>Raportti päivittyy automaattisesti pelin edetessä.</li>
                     </ul>
