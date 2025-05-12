@@ -679,3 +679,108 @@ button:disabled {
      display: none;
 }
 */
+
+/* --- Pelin tilan ja vastustajan kontrollien asettelu --- */
+
+.game-status-controls-wrapper {
+    display: flex; /* Asettaa Flexbox-layoutin */
+    flex-wrap: wrap; /* Sallii elementtien rivittyä pienillä näytöillä */
+    justify-content: space-around; /* Jakaa tilan elementtien ympärille */
+    align-items: center; /* Tasaa elementit pystysuunnassa keskelle */
+    gap: 20px; /* Väli elementtien välillä (vaaka- ja pystysuunnassa jos rivittyy) */
+    margin-bottom: 25px; /* Tilaa tämän osion ja pelaajalistan välille */
+    padding: 15px; /* Sisäistä tilaa wrapperille */
+    background-color: var(--bg-color); /* Taustaväri erottumaan hieman */
+    border: 1px solid var(--border-color); /* Reunaviiva */
+    border-radius: 8px; /* Pyöristetyt kulmat */
+}
+
+/* Muokataan .score-and-fouls-display sääntöjä */
+.score-and-fouls-display {
+    /* Poistetaan aiemmat keskitykset ja marginaalit, flex hoitaa */
+    margin: 0;
+    padding: 0; /* Voit lisätä paddingia tarvittaessa */
+    text-align: center; /* Keskittää tekstin tässä lohkossa */
+    flex-grow: 1; /* Voi kasvaa viemään tilaa */
+    flex-basis: 200px; /* Lähtöleveys ennen kasvua/kutistumista */
+    min-width: 180px; /* Estää kutistumasta liian pieneksi */
+}
+
+.score-and-fouls-display span { /* Yksittäiset rivit (pisteet, virheet) */
+    display: block; /* Asetetaan päällekkäin */
+    margin-bottom: 8px; /* Väliä rivien välille */
+    font-size: 1rem; /* Perusfonttikoko teksteille "Pisteet:", "Virheet:" */
+    line-height: 1.3;
+}
+.score-and-fouls-display span:last-child {
+    margin-bottom: 0;
+}
+
+/* ISOMMAT NUMEROT PISTEILLE JA VIRHEILLE */
+.score-and-fouls-display span span { /* Kohdistaa id="..." spanneihin */
+    font-weight: bold;
+    color: var(--primary-color);
+    font-size: 2rem; /* HUOM! Isompi fonttikoko numeroille */
+    margin: 0 5px; /* Pieni väli numeroiden ympärille */
+    display: inline-block; /* Varmistaa marginaalien toiminnan */
+}
+/* Voit halutessasi pienentää virheiden numeroa hieman */
+.score-and-fouls-display span #homeFoulsDisplay {
+    font-size: 1.5rem; /* Hieman pienempi kuin pisteet */
+}
+
+
+/* Muokataan .opponent-score-controls sääntöjä */
+.opponent-score-controls {
+    /* Poistetaan aiemmat keskitykset ja marginaalit */
+    margin: 0;
+    /* Poistetaan max-width, flex hoitaa leveyden */
+    /* max-width: 300px; */
+    padding: 10px; /* Säilytetään tai muokataan sisäistä paddingia */
+    border: none; /* Poistetaan oma reunus, jos wrapperilla on jo */
+    background-color: transparent; /* Läpinäkyvä tausta, jos wrapperilla on väri */
+    text-align: center; /* Keskittää sisällön (h4, buttonit) */
+    flex-shrink: 0; /* Estää kutistumasta liikaa, jos tila loppuu */
+    flex-basis: auto; /* Leveys määräytyy sisällön mukaan */
+}
+
+.opponent-score-controls h4 {
+    margin-top: 0;
+    margin-bottom: 10px; /* Hieman lisää tilaa otsikon ja nappien väliin */
+    font-size: 0.9rem;
+}
+
+.opponent-score-controls .opponent-score-btn {
+    padding: 8px 14px; /* Voit hieman suurentaa nappeja */
+    font-size: 0.85rem;
+    margin: 4px;
+}
+
+/* --- Responsiivisuus pienille näytöille --- */
+@media (max-width: 600px) { /* Säädä rajaa tarvittaessa */
+    .game-status-controls-wrapper {
+        flex-direction: column; /* Asetetaan takaisin päällekkäin */
+        align-items: center; /* Keskittää elementit vaakasuunnassa */
+        gap: 15px;
+    }
+
+    .score-and-fouls-display {
+        flex-basis: auto; /* Nollataan flex-basis */
+        width: 100%; /* Vie koko leveyden pinottuna */
+        text-align: center;
+        margin-bottom: 10px; /* Väliä seuraavaan elementtiin */
+    }
+
+     /* Voit halutessasi hieman pienentää fontteja mobiilissa */
+    .score-and-fouls-display span span {
+        font-size: 1.8rem;
+    }
+    .score-and-fouls-display span #homeFoulsDisplay {
+        font-size: 1.4rem;
+    }
+
+    .opponent-score-controls {
+        width: 100%; /* Vie koko leveyden */
+        max-width: 350px; /* Rajoitetaan silti maksimileveyttä */
+    }
+}
