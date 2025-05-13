@@ -7,35 +7,39 @@ Sovellus on toteutettu puhtaasti frontend-teknologioilla (HTML, CSS, JavaScript)
 ## Ominaisuudet
 
 ### 1. Pelaajien ja Pelin Asetukset
-*   **Pelin Nimen Syöttö:** Anna pelille kuvaava nimi (esim. "Kobrat - Honsu U12").
+*   **Joukkueiden Nimien Syöttö:** Anna koti- ja vierasjoukkueen nimet raportointia ja näyttöä varten.
+*   **Pelaajia Kentällä -asetus:** Valitse, pelataanko 3v3, 4v4 vai 5v5. Vaikuttaa maksimipelaajamäärään kentällä.
 *   **Pelaajien Lisäys:** Syötä pelaajien nimet ja pelinumerot ennen pelin alkua.
 *   **Pelaajalista:** Näyttää lisätyt pelaajat selkeästi. Pelaajia voi myös poistaa listalta.
 
 ### 2. Pelin Aikainen Käyttö
 *   **Pelin Aloitus/Lopetus:** Selkeät napit pelin aloittamiseen ja lopettamiseen. Jokainen merkittävä pelitapahtuma saa aikaleiman.
-*   **Jaksojen Vaihto:** Mahdollisuus siirtyä seuraavaan jaksoon (1-4).
-*   **Pelikatkot:** Nappi pelikatkon aloittamiseen ja jatkamiseen, jotta todellinen peliaika voidaan huomioida tarkemmin.
+*   **Jaksojen Vaihto:** Mahdollisuus siirtyä seuraavaan jaksoon (1-4). Jaksovirheet nollataan jakson alussa.
+*   **Pelikatkot:** Nappi pelikatkon aloittamiseen ja jatkamiseen, jotta todellinen peliaika voidaan huomioida tarkemmin (vaikuttamatta jaksovirheisiin).
 *   **Sticky Controls:** Pääohjauspainikkeet pysyvät näkyvillä näytön alareunassa pelinäkymässä vierittäessä.
 
 ### 3. Pelaajakohtaiset Tapahtumat
 Jokaisella pelaajalla on omat painikkeet pelinäkymässä:
-*   **"Kentälle" / "Penkillä":** Vaihda pelaajan tilaa. Tila erottuu visuaalisesti.
+*   **"Kentälle" / "Penkillä":** Vaihda pelaajan tilaa. Tila erottuu visuaalisesti. Vaikuttaa peliajan kertymiseen.
 *   **Pistemerkinnät:** +1P, +2P, +3P.
-*   **Virheet:** Henkilökohtaisten virheiden kirjaus.
+*   **Virheet:** Henkilökohtaisten virheiden kirjaus (sekä kokonaisvirheisiin että käynnissä olevan jakson virheisiin).
     *   **Fouled Out:** Pelaaja siirtyy automaattisesti penkille ja pois pelistä saatuaan 5 virhettä. Pelaajakortti ilmaisee tämän tilan.
 *   **Syötöt:** Koriin johtaneiden syöttöjen kirjaus.
 *   **Levypallot:** Levypallojen kirjaus.
-*   **Toimintojen Esto:** Pelaajan toimintonapit (pois lukien virhe) disabloidaan, jos pelaaja ei ole kentällä tai on "fouled out".
+*   **Toimintojen Esto:** Pelaajan toimintonapit (pois lukien virhe) disabloidaan, jos pelaaja ei ole kentällä tai on "fouled out". Syöttö/levypallo estetään myös manuaalisen katkon aikana.
 
-### 4. Historia & Analyysidata
-*   **Tapahtumahistoria:** Kaikki kirjatut tapahtumat (pelin aloitus/lopetus, jaksojen vaihdot, pelaajien vaihdot, pisteet, virheet jne.) näytetään aikajärjestyksessä (uusin ensin) omassa näkymässään.
-    *   Jokaisesta tapahtumasta näytetään aikaleima, jakso, pelaajan tiedot ja tapahtuman kuvaus.
-*   **Tapahtuman Poisto:** Virheellisesti kirjatun pelaajakohtaisen tapahtuman voi poistaa suoraan historiasta miinus-painikkeella. Poisto kumoaa tapahtuman vaikutukset pelaajan tilastoihin.
-*   **Kopiointipainike:** Kopioi koko pelihistorian (pelin nimi mukaan lukien) leikepöydälle tekstimuodossa, esimerkiksi tekoälyanalyysiä tai jatkokäsittelyä varten.
-*   **Pelihistorian Tyhjennys:** Mahdollisuus tyhjentää vain nykyisen pelin tapahtumat ja nollata pelaajien tilastot, säilyttäen kuitenkin pelaajalistan ja pelin nimen seuraavaa peliä varten.
+### 4. Raportointi, Historia & Analyysidata
+*   **Raportti-näkymä:**
+    *   Näyttää yhteenvedon pelistä (tila, kokonaispeliaika, pisteet, kotijoukkueen kokonaisvirheet).
+    *   Listaa pelaajakohtaiset tilastot (P, V, S, L) sekä **lasketun peliajan** (MM:SS) ja peluutusprosentin. Päivittyy pelin aikana.
+*   **Tapahtumahistoria:**
+    *   Kaikki kirjatut tapahtumat (pelin aloitus/lopetus, jaksojen vaihdot, pelaajien vaihdot, pisteet, virheet jne.) näytetään aikajärjestyksessä (uusin ensin) omassa näkymässään aikaleimoin ja jakson tilan kera.
+    *   **Tapahtuman Poisto:** Virheellisesti kirjatun tilastotapahtuman (pisteet, virheet, syötöt, levypallot, vast. pisteet) voi poistaa suoraan historiasta "Peru"-painikkeella. Poisto kumoaa tapahtuman vaikutukset pelaajan **kokonais**tilastoihin (ei korjaa peliaikaa tai jaksovirhelaskuria taannehtivasti).
+*   **Kopiointipainike (Historia):** Kopioi koko pelihistorian (joukkueiden nimet ja lopputulos mukaan lukien) leikepöydälle tekstimuodossa, esimerkiksi tekoälyanalyysiä tai jatkokäsittelyä varten.
+*   **Pelihistorian Tyhjennys:** Mahdollisuus tyhjentää vain nykyisen pelin tapahtumat ja nollata pelaajien tilastot sekä peliajat, säilyttäen kuitenkin pelaajalistan ja syötetyt joukkueiden nimet seuraavaa peliä varten.
 
 ### 5. Tallennus
-*   **Automaattinen Tallennus:** Kaikki syötetty data (pelaajat, pelin nimi, tapahtumat, pelin tila) tallennetaan automaattisesti selaimen `localStorage`:iin.
+*   **Automaattinen Tallennus:** Kaikki syötetty data (pelaajat, joukkueiden nimet, tapahtumat, pelin tila) tallennetaan automaattisesti selaimen `localStorage`:iin.
 *   **Pysyvyys:** Data säilyy, vaikka selain suljettaisiin ja avattaisiin uudelleen.
 
 ## Käyttöliittymä ja Ulkoasu
@@ -46,7 +50,7 @@ Jokaisella pelaajalla on omat painikkeet pelinäkymässä:
     *   "Fouled out" -pelaajat erottuvat punaisella korostuksella ja himmennyksellä.
     *   Painikkeet ovat suuria ja helposti klikattavia myös kosketusnäytöillä.
 *   **Google Fonts:** Käytössä `Montserrat` otsikoille ja `Roboto` / `Roboto Mono` leipätekstille ja datan esitykseen ammattimaisemman ilmeen saavuttamiseksi.
-*   **Näkymien Erottelu:** Selkeät välilehdet/näkymät eri vaiheille: Pelaajasyöttö → Pelin seuranta → Historia.
+*   **Näkymien Erottelu:** Selkeät näkymät eri toiminnoille: Asetukset → Pelin seuranta → Raportti → Historia, joiden välillä navigoidaan napeilla.
 
 ## Teknologiat
 *   **HTML5**
@@ -59,32 +63,32 @@ Jokaisella pelaajalla on omat painikkeet pelinäkymässä:
 
 Koska sovellus on puhtaasti selainpohjainen, erillistä asennusta ei tarvita.
 
-1.  **Lataa tiedostot:** Kloonaa tämä repository tai lataa tiedostot (`index.html`, `style.css`, `script.js`) koneellesi.
+1.  **Lataa tiedostot:** Kloonaa tämä repository tai lataa tiedostot (`index.html`, `style.css`, `script.js`, `logo_iso.png`) koneellesi.
 2.  **Avaa selaimessa:** Avaa `index.html`-tiedosto web-selaimessasi.
 
 TAI
 
-*   **GitHub Pages:** Jos sovellus on hostattu GitHub Pagesissa, voit käyttää sitä suoraan annetusta URL-osoitteesta.
+*   **GitHub Pages:** Käytä sovellusta suoraan osoitteesta: [https://vperasto.github.io/pelaajaseuranta-2/](https://vperasto.github.io/pelaajaseuranta-2/)
 
 ## Tulevaisuuden Kehitysideoita (Mahdollisia)
 
-*   Pelaajien todellisen peliajan laskenta ja näyttö (myös pelin aikana).
-*   Automaattisesti generoitu peliyhteenveto pelin jälkeen.
+*   Peliajan näyttö reaaliaikaisesti pelinäkymän pelaajakorteissa.
+*   Raporttinäkymän laajentaminen (esim. +/- tilasto, heittoprosentit).
 *   Tarkemmat heittotilastot (yritykset/onnistuneet).
 *   Menetysten kirjaus.
-*   Yksinkertaistettu vastustajan tilastointi.
-*   "Tallenna/Lataa kokoonpano" -toiminto.
-*   Ja paljon muuta!
+*   Vastustajan pelaajakohtainen (yksinkertaistettu) tilastointi.
+*   "Tallenna/Lataa kokoonpano" -toiminto eri pelejä varten.
+*   Jaksoittaisten virheiden näyttö myös raportissa.
 
 ## 🔒 Lisenssi
 
-Creative Commons Attribution-NonCommercial 4.0 International License  
-Tämä työ on lisensoitu nimellä: **Vesa Perasto**  
+Creative Commons Attribution-NonCommercial 4.0 International License
+Tämä työ on lisensoitu nimellä: **Vesa Perasto**
 [Katso lisenssi](http://creativecommons.org/licenses/by-nc/4.0/)
 
 ---
 
 ## 🙌 Kiitokset
 
-Sovellus kehitetty omaksi avuksi ja muiden ohjaajien tueksi.  
+Sovellus kehitetty omaksi avuksi ja muiden ohjaajien tueksi.
 Jos teet muutoksia tai laajennuksia, säilytä alkuperäinen tekijämerkintä.
