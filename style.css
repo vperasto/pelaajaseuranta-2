@@ -265,6 +265,7 @@ button:disabled {
     text-align: center;
     max-width: 300px; /* Rajaaleveys */
     border: 1px solid var(--border-color); /* Lisätty reuna */
+    border: 2px dotted darkslategrey;
 }
 .opponent-score-controls h4 {
     margin-top: 0; margin-bottom: 8px; font-family: var(--font-family-body);
